@@ -15,7 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from zikime import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('get/', views.is_resistered, name='get'),
+    path('', views.index, name='index'),
 ]
