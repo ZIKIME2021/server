@@ -1,0 +1,70 @@
+{% extends 'zikime/base.html' %}
+
+{% block content %}
+<style>
+  .detail-form-wrap {
+    background-color: #f8f8f8;
+    border-radius: 20px;
+    box-sizing: border-box;
+    padding: 20px 10px
+  }
+
+  .detail-content {
+    width: 70%;
+    display: table;
+    margin: 0 auto
+  }
+
+  .detail-title {
+    font-weight: bold;
+    font-size: 20px;
+    padding-bottom: 20px;
+  }
+</style>
+
+<div class="container">
+  <div class="detail-title">
+    'username'기기정보(보호자 / 안심지역)
+  </div>
+
+
+  <div class="detail-content">
+    <nav>
+      <ul class="pagination">
+        <li>
+          <span><a href="{% url 'detail' %}" ><p class=" text-dark">보호자</p><span class="sr-only"></span></a></span>
+        </li>
+        <li class="active">
+          <span><a href="{% url 'detail_area' %}">
+              <p class="text-white">안심지역</p><span class="sr-only">(current)</span>
+            </a></span>
+        </li>
+      </ul>
+    </nav>
+
+
+    <div class="detail-form-wrap">
+
+    </div>
+
+
+    <div class="container ">
+      <botton id="delete" class="btn btn-danger mt-5" onclick="deletecheck()">이 기기 삭제하기</button>
+  </div>
+</div>
+</div>
+
+<script>
+function deletecheck() {
+
+  if (confirm("기기와 관련된 데이터들은 모두 삭제됩니다.\n정말 기기를 삭제 하시겠습니까??") == true) { //확인
+
+      // 기기관련정보 모두 삭제?
+  } else { //취소
+      return false;
+  }
+
+}
+</script>
+
+{% endblock %}

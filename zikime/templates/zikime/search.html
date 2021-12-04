@@ -1,8 +1,60 @@
 {% extends 'zikime/base.html' %}
 
 {% block content %}
-<div class="container">
-    <p>기록조회페이지</p>
-</div>
+<style>
+    .search-form-wrap {
+        background-color: #f8f8f8;
+        border-radius: 20px;
+        box-sizing: border-box;
+        padding: 20px 10px
+    }
 
-{% endblock %}
+    .search-content {
+        width: 70%;
+        display: table;
+        margin: 0 auto
+    }
+
+    .search-title {
+        font-weight: bold;
+        font-size: 20px;
+        padding-bottom: 20px;
+    }
+</style>
+
+<div class="container">
+    <div class="search-content">
+        <div class="row mt-5">
+            <!--여백추가 mt-5-->
+            <div class="search-title">
+                기록조회
+            </div>
+        </div>
+
+        <div class="search-form-wrap">
+            <div class="col-12">
+                <form mothod="POST" action=".">
+                    <select name="device" id="device">
+                        <option value="">기기선택</option>
+                        {% if device_list %}
+                        {% for device in device_list %} 
+                            <option value="{{ device.id }}">{{ device.id }}</option>
+                        {% endfor %}
+                        {% endif %}
+                    </select>
+                    <select name="date" id="date">
+                        <option value="">날짜선택</option>
+                        <option value="1일전">1일전</option>
+                        <option value="3일전">3일전</option>
+                        <option value="7일전">7일전</option>
+                        <option value="30일전">30일전</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary ">조회하기</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+    {% endblock %}

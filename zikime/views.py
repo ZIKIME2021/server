@@ -84,3 +84,9 @@ def detail(request):
     request,
     'zikime/detail.html',
 )
+
+def detail_area(request):
+    return render(
+    request,
+    'zikime/detail_area.html',
+)
