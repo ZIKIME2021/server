@@ -15,10 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from zikime import views
+
+# media
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
+    path('', include('zikime.urls')),
     path('admin/', admin.site.urls),
-    path('get/', views.is_resistered, name='get'),
-    path('', views.index, name='index'),
 ]
+
+# media
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
