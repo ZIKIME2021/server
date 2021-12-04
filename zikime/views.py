@@ -79,6 +79,8 @@ def signup(request):
     #         user.save()
     #     return render(request, 'zikime/signup.html',res_data)
     
-def device_regist(request):
-    form = forms.RegistFrom()
-    return render(request, 'regist.html', {'form': form})
+def detail(request):
+    return render(
+    request,
+    'zikime/detail.html',
+)

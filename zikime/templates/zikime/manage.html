@@ -2,57 +2,135 @@
 
 {% block content %}
 <style>
-    .modal-backdrop{z-index:-1}
-    .device-modal-title{font-weight:bold;font-size:20px}
-    #device-title{font-family:'dotum';border:1px solid #ccc;width:80%;height:40px;box-sizing:border-box;padding:0 10px;}
-    #device-submit{border:none;margin-left:1%;width:18%;height:40px;background-color:#002864;color:#fff}
- </style>
+   .manage-title {
+      font-weight: bold;
+      font-size: 20px;
+      padding-bottom: 20px;
+   }
+
+   .manage-content {
+      width: 80%;
+      display: table;
+      margin: 0 auto
+   }
+
+   .manage-form-wrap {
+      background-color: #f8f8f8;
+      border-radius: 20px;
+      box-sizing: border-box;
+      padding: 20px 10px
+   }
+
+   .modal-backdrop {
+      z-index: -1
+   }
+
+   .device-modal-title {
+      font-weight: bold;
+      font-size: 20px
+   }
+
+   #device-title {
+      font-family: 'dotum';
+      border: 1px solid #ccc;
+      width: 80%;
+      height: 40px;
+      box-sizing: border-box;
+      padding: 0 10px;
+   }
+
+   #device-submit {
+      border: none;
+      margin-left: 1%;
+      width: 18%;
+      height: 40px;
+      background-color: #002864;
+      color: #fff
+   }
+</style>
 
 <div class="container">
-    <p>기기등록페이지</p>
-</div>
 
-<div class="container">
-<div class="panel panel-danger">
-    <div class="panel-heading">
-      <h3 class="panel-title">등록된 기기가 없습니다.</h3>
-    </div>
-    {% comment %} {% if 등록된 기기가 없다면, %} {% endcomment %}
-        <div class="panel-body">
-        <b>기기등록방법</b><br>
-            1. 지키미 디바이스를 준비합니다.<br>
-            2. 지키미 디바이스의 전원을 켜 네트워크 연결을 합니다.<br>
-            3. 나오는 '기기등록' 버튼을 클릭해주세요.<br>
-            4. 등록가능한 기기라면 4자리의 등록번호가 나타납니다.<br>
-            5. 아래의 '기기등록하기' 버튼을 눌러 등록번호를 입력해주세요.<br>
+
+   <div class="manage-content">
+      <div class="manage-title">
+         기기등록
+      </div>
+      <div class="manage-form-wrap">
+         {% comment %} {% if 등록된 기기가 없다면, %} {% endcomment %}
+         <div class="panel panel-danger">
+            <div class="panel-heading">
+               <h3 class="panel-title">등록된 기기가 없습니다.</h3>
+            </div>
+            <div class="panel-body">
+               <b>기기등록방법</b><br>
+               1. 지키미 디바이스를 준비합니다.<br>
+               2. 지키미 디바이스의 전원을 켜 네트워크 연결을 합니다.<br>
+               3. 나오는 '기기등록' 버튼을 클릭해주세요.<br>
+               4. 등록가능한 기기라면 4자리의 등록번호가 나타납니다.<br>
+               5. 아래의 '기기등록하기' 버튼을 눌러 등록번호를 입력해주세요.<br>
+            </div>
+         </div>
+         {% comment %} {% else %} {% endcomment %}
+         <div class="container my-3">
+            <table class="table">
+                <thead>
+                <tr class="thead-dark">
+                    <th>번호</th>
+                    <th>기기 닉네임</th>
+                    <th>기기 등록일</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if device_list %}
+                {% for device in device_list %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>
+                        {% comment %} 기기 상세 페이지로 가는 링크 {% endcomment %}
+                        <a href="{% url 'zikime:detail' device.id %}">{{ device.nickname }}</a> 
+                    </td>
+                    <td>{{ device.created_at }}</td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="3" 등록기기없음></td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
         </div>
-    {% comment %} {% else %} {% endcomment %}
-  </div>
-</div>
+      </div>
+   </div>
+
+
+   <div style="text-align: center;">
+      <button type="button" class="btn btn-primary mt-5 mb-5" data-toggle="modal" data-target="#device-modal"> 기기등록하기
+      </button>
+   </div>
+   <!-- 기기등록하기 모달 Start -->
+   <div class="modal" id="device-modal">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content device-modal-content">
+            <div class="modal-header">
+               <div class="modal-title device-modal-title">기기등록하기</div>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                     aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+               <form name="deviceupdate" method="post">
+                  <input type="text" name="device_title" id="device-title" placeholder="등록번호" required>
+                  <input type="submit" id="device-submit" value="등록">
+               </form>
+            </div>
+            <div class="modal-footer"> <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+            </div>
+         </div>
+      </div>
+      <!-- 기기등록하기 모달 End -->
 
 
 
-<div style="text-align: center;">
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#device-modal"> 기기등록하기 </button>
-</div>
 
-<!-- 기기등록하기 모달 Start -->
- <div class="modal" id="device-modal">
- <div class="modal-dialog" role="document">
-    <div class="modal-content device-modal-content">
-       <div class="modal-header">
-          <div class="modal-title device-modal-title">기기등록하기</div>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-       </div>
-       <div class="modal-body"> 
-          <form name="deviceupdate" method="post">
-             <input type="text" name="device_title" id="device-title" placeholder="등록번호" required>
-             <input type="submit" id="device-submit" value="등록">
-          </form>
-       </div>
-       <div class="modal-footer"> <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button></div>
-    </div>
- </div>
- <!-- 기기등록하기 모달 End -->
- 
-{% endblock %}
+      {% endblock %}

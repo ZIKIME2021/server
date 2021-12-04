@@ -1,14 +1,22 @@
 {% extends 'zikime/base.html' %}
 
 {% block content %}
+<style>
+    .signup-form-wrap{background-color:#f8f8f8;border-radius:20px;box-sizing:border-box;padding:20px 10px}
+    .signup-content{width:70%;display:table;margin:0 auto}
+    .signup-title{font-weight:bold;font-size:20px;padding-bottom:20px;}
+</style>
+
 <div class="container">
+    <div class="signup-content">
     <div class="row mt-5">
         <!--여백추가 mt-5-->
-        <div class="col-12 text-center">
-            <h1>회원가입</h1>
+        <div class="signup-title">
+            회원가입
         </div>
     </div>
-    <div class="row">
+
+    <div class="signup-form-wrap">
         <div class="col-12">
             <form mothod="POST" action=".">
                 {% csrf_token %}
@@ -36,10 +44,11 @@
                     <input type="checkbox" class="form-check-input" id="exampleCheck1">
                     <label class="form-check-label" for="exampleCheck1">Check me out</label>
                 </div>
-                <button type="submit" class="btn btn-primary" onclick="signupcheck()">회원가입완료</button>
+                <button type="submit" class="btn btn-primary btn-block" onclick="signupcheck()">회원가입완료</button>
             </form>
 
         </div>
+    </div>
     </div>
     <script>
         function signupcheck(){
@@ -53,4 +62,4 @@
            }
         }
      </script>
-    {% endblock %}
+{% endblock %}
