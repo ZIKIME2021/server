@@ -2,7 +2,7 @@ import json
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.db import models
-from zikime.models import Device, Regist, Serial
+from zikime.models import CustomUser, Device, Regist, Serial
 
 def is_resistered(request):
     if request.method == 'GET':
@@ -40,9 +40,17 @@ def search(request):
     )
     
 def manage(request):
+    regist_list = Regist.objects.all()
+    # regist_device_list = Device.objects.filter(seirregist_list.divice)
+    # regist_list = Regist.objects.allselect_related('device__serial');
+    
+    #TODO devi ec 에서 정보 받아오기
     return render(
         request,
         'zikime/manage.html',
+        {
+            'device_list':regist_list
+        }
     )
 
 def mypage(request):
