@@ -9,10 +9,6 @@ from . import models # 👈 해당 model이 존재하는 파일을 import
 #     pass
 # admin.site.register(models.CustomUser, ModelAdmin)
 
-class PermissionInline(admin.TabularInline):
-    model = models.Permission
-
-
 @admin.register(models.CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
     list_filter = ('date_joined',)
@@ -40,10 +36,10 @@ class StatusAdmin(admin.ModelAdmin):
 @admin.register(models.Device)
 class DeviceAdmin(admin.ModelAdmin):
     list_filter = ('created_at',)
-    list_display = ('serial', 'owner', 'camera_module_info', 'gps_module_info')
+    list_display = ('serial', 'camera_module_info', 'gps_module_info')
     fieldsets = (
         (None, {
-            "fields": ('serial', 'owner',),
+            "fields": ('serial', ),
         }),
         ('Module', {
             'fields':('camera_module_info', 'gps_module_info')
@@ -63,27 +59,9 @@ class SerialAdmin(admin.ModelAdmin):
         }),
     )
     search_fields = ['serial_number',]
-    
+
 @admin.register(models.Regist)
 class RegistAdmin(admin.ModelAdmin):
-    list_filter = ('created_at',)
-    list_display = ('device', 'protege', 'protector', 'created_at')
-    fieldsets = (
-        (None, {
-            "fields": (
-                'device',
-            ),
-        }),
-        ('관계', {
-            'fields': (
-                'protege', 'protector'
-            )
-        }),
-    )
-    
-
-@admin.register(models.Permission)
-class PermissionAdmin(admin.ModelAdmin):
     list_filter = ('created_at', 'changed_at')
     list_display = ('device', 'user', 'role', 'created_at', 'changed_at')
     fieldsets = (
@@ -104,22 +82,22 @@ class PermissionAdmin(admin.ModelAdmin):
 @admin.register(models.Attachment)
 class AttachmentAdmin(admin.ModelAdmin):
     list_filter = ('created_at',)
-    list_display = ('device', 'user', 'type', 'saved_path', 'created_at')
+    list_display = ('device', 'master', 'saved_path', 'created_at')
     fieldsets = (
         (None, {
             "fields": (
-                'device', 'user'
+                'device', 'master'
             ),
         }),
         ('Data', {
             'fields': (
-                'type', 'saved_path'
+                 'saved_path',
             )
         }),
     )
     
-@admin.register(models.History)
-class HistoryAdmin(admin.ModelAdmin):
+@admin.register(models.StatusHistory)
+class StatusHistoryAdmin(admin.ModelAdmin):
     list_filter = ('created_at',)
     fieldsets = (
         (None, {

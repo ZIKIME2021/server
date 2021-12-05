@@ -51,8 +51,39 @@
                     </select>
                     <button type="submit" class="btn btn-primary ">조회하기</button>
                 </form>
-
             </div>
+            <div class="col-12">
+                <div class="detail-form-wrap">
+                    <table class="table">
+                        <thead>
+                            <tr class="thead-dark">
+                                <th>No.</th>
+                                <th>날짜</th>
+                                <th>시간</th>
+                                <th>위치</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if guest_list %}
+                            {% for guest in guest_list %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ guest.username }}</td>
+                                <td>{{ guest.email }}</td>
+                                <th><button class="btn btn-warning"> 권한 넘기기 </button></th>
+                            </tr>
+                            {% endfor %}
+                            {% else %}
+                            <tr>
+                                <td colspan="4">다른 보호자가 없습니다.</td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+        
+            </div>
+
         </div>
     </div>
 

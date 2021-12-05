@@ -30,23 +30,15 @@
       font-size: 20px
    }
 
-   #device-title {
+   #device-number {
       font-family: 'dotum';
       border: 1px solid #ccc;
-      width: 80%;
+      width: 100%;
       height: 40px;
       box-sizing: border-box;
       padding: 0 10px;
    }
 
-   #device-submit {
-      border: none;
-      margin-left: 1%;
-      width: 18%;
-      height: 40px;
-      background-color: #002864;
-      color: #fff
-   }
 </style>
 
 <div class="container">
@@ -106,10 +98,10 @@
 
 
    <div style="text-align: center;">
-      <button type="button" class="btn btn-primary mt-5 mb-5" data-toggle="modal" data-target="#device-modal"> 기기등록하기
+      <button type="button" class="btn btn-primary mt-5 mb-5" data-toggle="modal" data-target="#deviceModal"> 기기등록하기
       </button>
    </div>
-   <!-- 기기등록하기 모달 Start -->
+   {% comment %} <!-- 기기등록하기 모달 Start -->
    <div class="modal" id="device-modal">
       <div class="modal-dialog" role="document">
          <div class="modal-content device-modal-content">
@@ -128,8 +120,31 @@
             </div>
          </div>
       </div>
-      <!-- 기기등록하기 모달 End -->
-
+      <!-- 기기등록하기 모달 End --> {% endcomment %}
+      <div class="modal fade" id="deviceModal" tabindex="-1" role="dialog" aria-labelledby="deviceModalLabel" aria-hidden="true">
+         <div class="modal-dialog">
+           <div class="modal-content">
+             <div class="modal-header">
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+               <h4 class="modal-title" id="diviceModalLabel">기기등록</h4>
+             </div>
+             <div class="modal-body">
+                  <input type="text" name="device-number" id="device-number" placeholder="등록번호" required>
+             </div>
+             <div class="modal-footer">
+               <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+               <button type="button" class="btn btn-primary">등록</button>
+             </div>
+           </div>
+         </div>
+      </div>
+       
+   <script>
+      $('.modal').on('hidden.bs.modal', function (e) {
+         console.log('modal close');
+       $(this).find('form')[0].reset()
+     });
+   </script>
 
 
 
