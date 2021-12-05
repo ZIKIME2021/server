@@ -4,7 +4,7 @@ from django.http import HttpResponse, JsonResponse
 from django.db import models
 from zikime.models import Device, Regist, Serial
 
-serial = None
+serial = '10000000d2814bc1'
 
 def is_resistered(request):
     global serial
@@ -41,6 +41,9 @@ def search(request):
     
 def manage(request):
 
+    devices = Device.objects
+    print(devices)
+
     # POST요청이면 form 데이터를 처리한다.
     if request.method == 'POST':
         response = requests.request("GET", "http://www.zikime.com:9999/regist/"+serial)
@@ -53,6 +56,7 @@ def manage(request):
     return render(
         request,
         'zikime/manage.html',
+        {'device_list' : devices},
     )
 
 def mypage(request):
