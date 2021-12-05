@@ -9,6 +9,5 @@ urlpatterns = [
     path('search/', views.search),
     path('manage/',views.manage),
     path('mypage/', views.mypage),
-    path('regist/', views.device_regist, name='device_regist'),
     path('signup/', views.signup, name='signup'),
 ]

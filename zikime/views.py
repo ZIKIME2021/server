@@ -1,10 +1,13 @@
-import json
+import json, requests
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.db import models
 from zikime.models import Device, Regist, Serial
 
+serial = None
+
 def is_resistered(request):
+    global serial
     if request.method == 'GET':
         serial = request.GET['serial']
         devices = Device.objects.all()
@@ -17,9 +20,6 @@ def is_resistered(request):
 def complete(request):
     print(request.GET)
     return HttpResponse('Hi')
-
-def register(request):
-    return render(request, 'zikime/register.html')
 
 def index(request):
     return render(
@@ -40,6 +40,16 @@ def search(request):
     )
     
 def manage(request):
+
+    # POST요청이면 form 데이터를 처리한다.
+    if request.method == 'POST':
+        response = requests.request("GET", "http://www.zikime.com:9999/regist/"+serial)
+        json_msg = response.json()
+        regist_number = json_msg['regist_number']
+        data = request.POST['device_title']
+
+        return JsonResponse({'data:': regist_number == int(data)})
+
     return render(
         request,
         'zikime/manage.html',
@@ -78,7 +88,3 @@ def signup(request):
     #         )
     #         user.save()
     #     return render(request, 'zikime/signup.html',res_data)
-    
-def device_regist(request):
-    form = forms.RegistFrom()
-    return render(request, 'regist.html', {'form': form})

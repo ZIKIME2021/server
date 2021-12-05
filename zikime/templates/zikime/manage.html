@@ -46,6 +46,7 @@
        </div>
        <div class="modal-body"> 
           <form name="deviceupdate" method="post">
+             {% csrf_token %}
              <input type="text" name="device_title" id="device-title" placeholder="등록번호" required>
              <input type="submit" id="device-submit" value="등록">
           </form>
