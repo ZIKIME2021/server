@@ -92,3 +92,15 @@ def signup(request):
     #         )
     #         user.save()
     #     return render(request, 'zikime/signup.html',res_data)
+    
+def detail(request):
+    return render(
+    request,
+    'zikime/detail.html',
+)
+
+def detail_area(request):
+    return render(
+    request,
+    'zikime/detail_area.html',
+)
