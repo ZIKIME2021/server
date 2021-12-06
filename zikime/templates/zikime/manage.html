@@ -71,6 +71,7 @@
                     <th>번호</th>
                     <th>기기 닉네임</th>
                     <th>기기 등록일</th>
+                    <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -79,9 +80,10 @@
                 <tr>
                     <td>{{ forloop.counter }}</td>
                     <td>
-                        <a href="{% url 'detail'  %}">{{ device.nickname }}</a> 
+                        {{ device.nickname }}
                     </td>
                     <td>{{ device.created_at }}</td>
+                    <th><button class="btn btn-danger m-1" onclick="deletecheck()"> 기기제거</button><button class="btn btn-info m-1 "> 닉네임변경</button><a href="{% url 'detail'  %}"><button class="btn btn-success m-1 ">관리상세페이지</button></a> </th>
                 </tr>
                 {% endfor %}
                 {% else %}
@@ -125,6 +127,20 @@
          console.log('modal close');
        $(this).find('form')[0].reset()
      });
+      function deletecheck() {
+
+          if (confirm("기기와 관련된 데이터들은 모두 삭제됩니다.\n정말 기기를 삭제 하시겠습니까??") == true) { //확인
+
+              // 기기관련정보 모두 삭제?
+          } else { //취소
+              return false;
+          }
+
+      }
+      $('.modal').on('hidden.bs.modal', function (e) {
+          console.log('modal close');
+        $(this).find('form')[0].reset()
+      });
    </script>
 
 

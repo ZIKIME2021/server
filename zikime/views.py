@@ -1,13 +1,10 @@
-import json, requests
+import json
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.db import models
 from zikime.models import CustomUser, Device, Regist, Serial
 
-serial = '10000000d2814bc1'
-
 def is_resistered(request):
-    global serial
     if request.method == 'GET':
         serial = request.GET['serial']
         devices = Device.objects.all()
@@ -20,6 +17,9 @@ def is_resistered(request):
 def complete(request):
     print(request.GET)
     return HttpResponse('Hi')
+
+def register(request):
+    return render(request, 'zikime/register.html')
 
 def index(request):
     return render(
