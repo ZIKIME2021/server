@@ -33,12 +33,11 @@ class Serial(models.Model):
     
     
 class Device(models.Model):
-    serial = models.OneToOneField(Serial, db_column='Serial_ID', verbose_name='시리얼 번호', help_text='This value is automatically entered by reference.',on_delete=models.CASCADE)
+    serial = models.ForeignKey(Serial, db_column='Serial_ID', verbose_name='시리얼 번호', help_text='This value is automatically entered by reference.',on_delete=models.CASCADE,  related_name='serial')
     gps_module_info = models.CharField(db_column='GPS_INFO', verbose_name='GPS 모듈 정보', help_text='This value is automatically entered by device connecting.', max_length=100)
     camera_module_info = models.CharField(db_column='CAMERA_INFO', verbose_name='카메라 모듈 정보', help_text='This value is automatically entered by device connecting.', max_length=100)
-    owner = models.ForeignKey(CustomUser, db_column='User_ID', verbose_name='디바이스 소유자', help_text='This value is automatically entered by device connecting.', on_delete=models.SET_DEFAULT, default='-1', ) # to be determined
     created_at = models.DateTimeField(db_column='CRE_DT', verbose_name='디바이스 등록 날짜', help_text='This value is automatically entered when the table is created.',auto_now_add=True,  null=True)
-   
+    nickname = models.CharField(db_column='Nickname',verbose_name='기기 닉네임', default='닉네임 없음', max_length=30 )
     def __str__(self):
             return self.serial.serial_number
     
@@ -48,7 +47,7 @@ class Device(models.Model):
         verbose_name_plural = '디바이스 리스트'
         constraints = [
             models.UniqueConstraint(
-                fields=['serial', 'owner'],
+                fields=['serial',],
                 name = 'unique device',
                 # deferrable = constraints.Deferrable.DEFERRED,
             )
@@ -58,7 +57,7 @@ class Device(models.Model):
         
         
 class Status(models.Model):
-    device = models.OneToOneField(Device, db_column='Device_ID',verbose_name='디바이스 시리얼 번호', help_text='This value is automatically entered when the table is created.',on_delete=models.CASCADE, default='')
+    device = models.ForeignKey(Device, db_column='Device_ID',verbose_name='디바이스 시리얼 번호', help_text='This value is automatically entered when the table is created.',on_delete=models.CASCADE, default='')
     mode = models.CharField(db_column='Mode_ST', verbose_name='디바이스 모드', help_text='If the state is normal N is if the the state is emergency F is automatically entered.', max_length=1, default='N', )
     latitude = models.FloatField(db_column='Latitude_ST', verbose_name='위도', help_text='This value is automatically entered by receiving the status of the connected device',default=0.0 )
     longitude = models.FloatField(db_column='longitude_ST', verbose_name='경도', help_text='This value is automatically entered by receiving the status of the connected device', default=0.0)
@@ -77,67 +76,40 @@ class Status(models.Model):
 
         
 class Regist(models.Model):
-    protector = models.OneToOneField(CustomUser, db_column='Proector_ID', verbose_name='보호자', help_text='This value must be entered by the owner or by the user specified by the owner.', on_delete=models.CASCADE, related_name='registered_protector')
-    protege = models.OneToOneField(CustomUser, db_column='Progete_ID', verbose_name='피보호자', help_text='This value must be entered by the owner or by the user specified by the owner.', on_delete=models.CASCADE, related_name='registered_protege')
-    device = models.OneToOneField(Device, db_column='Device_ID', verbose_name='디바이스 ID', help_text='TThis value is automatically entered when the table is created. owner\'s device id ', on_delete=models.CASCADE, related_name='registered_device')
-    created_at = models.DateTimeField(db_column='CRE_DT', verbose_name='관계 등록 날짜', help_text='This value is automatically entered when the table is created.', auto_now_add=True, null=True)
-    
-    def __str__(self):
-            return self.device.serial.serial_number
-    
-    class Meta:
-        db_table = 'regist_info'
-        verbose_name = '관계 등록 정보'
-        verbose_name_plural = '관계 등록 리스트'
-        constraints = [
-            models.UniqueConstraint(
-                fields=['protector', 'protege', 'device'],
-                name = 'unique regist',
-                # deferrable = constraints.Deferrable.DEFERRED,
-            )
-        ]
-        
-
-class Permission(models.Model):
-    user = models.ForeignKey(CustomUser,db_column='User_ID', verbose_name='디바이스에 연결된 사용자', help_text='This value must be entered by the owner or by the user specified by the owner.', on_delete=models.CASCADE, related_name='permission_user_id')
-    device = models.ForeignKey(Device,db_column='Device_ID', verbose_name='사용자와 연결된 디바이스', help_text='This value must be owner\s device ID', on_delete=models.CASCADE, related_name='permission_device_id')
-    ROLE_PROTECTOR = "protector"
-    ROLE_PROTEGE = "protege"
-    ROLE_OBSERVER = "observer" 
+    user = models.ForeignKey(CustomUser,db_column='User_ID', verbose_name='디바이스에 연결된 사용자', help_text='This value must be entered by the owner or by the user specified by the owner.', on_delete=models.CASCADE, related_name='regist_user_id')
+    device = models.ForeignKey(Device,db_column='Device_ID', verbose_name='사용자와 연결된 디바이스', help_text='This value must be owner\s device ID', on_delete=models.CASCADE, related_name='regist_device_id')
+    ROLE_MASTER = "master"
+    ROLE_GUEST = "guest"
     ROLE_OTHER = "other"
     ROLE_CHOICES = (
-        (ROLE_PROTECTOR, "Protector"),
-        (ROLE_PROTEGE, "Protege"),
-        (ROLE_OBSERVER, "Observer"),
+        (ROLE_MASTER, "Master"),
+        (ROLE_GUEST, "Guest"),
         (ROLE_OTHER, "Other"),
     )
     role = models.CharField(
         choices=ROLE_CHOICES, max_length=10,
         db_column='ROLE_CD',
         verbose_name='사용자 권한 코드',
-        help_text='This value is entered as a selected one of ROLE_CHOICES'
+        help_text='This value is entered as a selected one of ROLE_CHOICES',
+        default='guest',
     )
     created_at = models.DateTimeField(db_column='CRE_DT', verbose_name='생성 날짜', help_text='This value is automatically entered when the table is created.', auto_now_add=True, null=True, blank=True)
     changed_at = models.DateTimeField(db_column='CHG_DT', verbose_name='수정 날짜', help_text='This value is automatically entered when the table is updated.', auto_now=True)
     # deleted_date = models.DateTimeField(null=True, verbose_name='연결해제날짜')
     search_fields = ['role',]
     
-    
-    
     def __str__(self):
             return self.role
-        
-    
     
     class Meta:
-        db_table = 'permission_list'
-        verbose_name = '사용자 권한 정보'
-        verbose_name_plural = '사용자 권한 리스트'
+        db_table = 'regist_list'
+        verbose_name = '사용자 등록 정보'
+        verbose_name_plural = '사용자 등록 리스트'
         # unique_together = (('user_id', 'device_id'),)
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'device'],
-                name = 'unique permissions',
+                name = 'unique regist',
                 # deferrable = constraints.Deferrable.DEFERRED,
             )
         ]
@@ -146,21 +118,7 @@ class Permission(models.Model):
 class Attachment(models.Model):
     device = models.ForeignKey(Device,db_column='Device_ID', verbose_name='디바이스ID', help_text='This value is automatically entered when the table is created.', on_delete=models.CASCADE)
     user = models.ForeignKey(User,db_column='Owner_ID', verbose_name='소유자 ID', help_text='This value is automatically entered when the table is created.', on_delete=models.CASCADE)
-    TYPE_VIDEO = "video"
-    TYPE_AUDIO = "audio"
-    TYPE_IMAGE = "image" 
-    TYPE_OTHER = "other"
-    TYPE_CHOICES = (
-        (TYPE_VIDEO, "Video"),
-        (TYPE_AUDIO, "Audio"),
-        (TYPE_IMAGE, "Image"),
-        (TYPE_OTHER, "Other"),
-    )
-    type = models.CharField(
-        choices = TYPE_CHOICES, max_length=10,
-        db_column='TYPE', verbose_name='미디어 타입', help_text='This value is entered as a selected one of TYPE_CHOICES'
-    )
-    
+
     created_at = models.DateTimeField(db_column='CRE_DT', verbose_name='생성 날짜', help_text='This value is automatically entered when the table is created.', auto_now_add=True, null=True)
     
     def __str__(self):
@@ -174,8 +132,8 @@ class Attachment(models.Model):
     
     class Meta:
         db_table = 'attachment_list'
-        verbose_name = '부가 파일 정보'
-        verbose_name_plural = '부가 파일 리스트'            
+        verbose_name = '영상 파일 정보'
+        verbose_name_plural = '영상 파일 리스트'            
         constraints = [
             models.UniqueConstraint(
                 fields=['device', 'user'],

@@ -1,0 +1,91 @@
+{% extends 'zikime/base.html' %}
+
+{% block content %}
+<style>
+    .search-form-wrap {
+        background-color: #f8f8f8;
+        border-radius: 20px;
+        box-sizing: border-box;
+        padding: 20px 10px
+    }
+
+    .search-content {
+        width: 70%;
+        display: table;
+        margin: 0 auto
+    }
+
+    .search-title {
+        font-weight: bold;
+        font-size: 20px;
+        padding-bottom: 20px;
+    }
+</style>
+
+<div class="container">
+    <div class="search-content">
+        <div class="row mt-5">
+            <!--여백추가 mt-5-->
+            <div class="search-title">
+                기록조회
+            </div>
+        </div>
+
+        <div class="search-form-wrap">
+            <div class="col-12">
+                <form mothod="POST" action=".">
+                    <select name="device" id="device">
+                        <option value="">기기선택</option>
+                        {% if device_list %}
+                        {% for device in device_list %} 
+                            <option value="{{ device.id }}">{{ device.id }}</option>
+                        {% endfor %}
+                        {% endif %}
+                    </select>
+                    <select name="date" id="date">
+                        <option value="">날짜선택</option>
+                        <option value="1일전">1일전</option>
+                        <option value="3일전">3일전</option>
+                        <option value="7일전">7일전</option>
+                        <option value="30일전">30일전</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary ">조회하기</button>
+                </form>
+            </div>
+            <div class="col-12">
+                <div class="detail-form-wrap">
+                    <table class="table">
+                        <thead>
+                            <tr class="thead-dark">
+                                <th>No.</th>
+                                <th>날짜</th>
+                                <th>시간</th>
+                                <th>위치</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if guest_list %}
+                            {% for guest in guest_list %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ guest.username }}</td>
+                                <td>{{ guest.email }}</td>
+                                <th><button class="btn btn-warning"> 권한 넘기기 </button></th>
+                            </tr>
+                            {% endfor %}
+                            {% else %}
+                            <tr>
+                                <td colspan="4">다른 보호자가 없습니다.</td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+        
+            </div>
+
+        </div>
+    </div>
+
+
+    {% endblock %}
