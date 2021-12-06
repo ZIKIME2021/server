@@ -33,7 +33,7 @@ class Serial(models.Model):
     
     
 class Device(models.Model):
-    serial = models.ForeignKey(Serial, db_column='Serial_ID', verbose_name='시리얼 번호', help_text='This value is automatically entered by reference.',on_delete=models.CASCADE,  related_name='serial_id')
+    serial = models.ForeignKey(Serial, db_column='Serial_ID', verbose_name='시리얼 번호', help_text='This value is automatically entered by reference.',on_delete=models.CASCADE,  related_name='serial')
     gps_module_info = models.CharField(db_column='GPS_INFO', verbose_name='GPS 모듈 정보', help_text='This value is automatically entered by device connecting.', max_length=100)
     camera_module_info = models.CharField(db_column='CAMERA_INFO', verbose_name='카메라 모듈 정보', help_text='This value is automatically entered by device connecting.', max_length=100)
     created_at = models.DateTimeField(db_column='CRE_DT', verbose_name='디바이스 등록 날짜', help_text='This value is automatically entered when the table is created.',auto_now_add=True,  null=True)

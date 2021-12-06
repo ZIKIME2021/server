@@ -40,16 +40,24 @@ def search(request):
     )
     
 def manage(request):
-    regist_list = Regist.objects.all()
+
+    devices = set()
+    
+    for e in Device.objects.select_related('serial'):
+        # select_related ()가 없으면 각각에 대한 데이터베이스 쿼리가 생성됩니다.
+    # 각 항목에 대한 관련 블로그를 가져 오기위한 반복 반복.
+        devices.add(e)
+    # regist_list = Regist.objects.all()
     # regist_device_list = Device.objects.filter(seirregist_list.divice)
     # regist_list = Regist.objects.allselect_related('device__serial');
-    
+    # device_list = Regist.objects.select_related('user').all()
+
     #TODO devi ec 에서 정보 받아오기
     return render(
         request,
         'zikime/manage.html',
         {
-            'device_list':regist_list
+            'device_list':devices
         }
     )
 
