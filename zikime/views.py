@@ -2,7 +2,7 @@ import json, requests
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.db import models
-from zikime.models import Device, Regist, Serial
+from zikime.models import CustomUser, Device, Regist, Serial
 
 serial = '10000000d2814bc1'
 
@@ -41,22 +41,24 @@ def search(request):
     
 def manage(request):
 
-    devices = Device.objects
-    print(devices)
+    devices = set()
+    
+    for e in Device.objects.select_related('serial'):
+        # select_related ()가 없으면 각각에 대한 데이터베이스 쿼리가 생성됩니다.
+    # 각 항목에 대한 관련 블로그를 가져 오기위한 반복 반복.
+        devices.add(e)
+    # regist_list = Regist.objects.all()
+    # regist_device_list = Device.objects.filter(seirregist_list.divice)
+    # regist_list = Regist.objects.allselect_related('device__serial');
+    # device_list = Regist.objects.select_related('user').all()
 
-    # POST요청이면 form 데이터를 처리한다.
-    if request.method == 'POST':
-        response = requests.request("GET", "http://www.zikime.com:9999/regist/"+serial)
-        json_msg = response.json()
-        regist_number = json_msg['regist_number']
-        data = request.POST['device_title']
-
-        return JsonResponse({'data:': regist_number == int(data)})
-
+    #TODO devi ec 에서 정보 받아오기
     return render(
         request,
         'zikime/manage.html',
-        {'device_list' : devices},
+        {
+            'device_list':devices
+        }
     )
 
 def mypage(request):
