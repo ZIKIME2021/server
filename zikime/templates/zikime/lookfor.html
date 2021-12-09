@@ -2,56 +2,96 @@
 
 {% block content %}
 <!-- services와 clusterer, drawing 라이브러리 불러오기 -->
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=&libraries=services,clusterer,drawing"></script>
+<script type="text/javascript"
+	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7e6e33fad9a4403b189b91203773fe8a&libraries=services,clusterer,drawing">
+</script>
 
-<div class="container">
-    <p>피보호자찾기 페이지</p>
-    <div id="map" style="width:45vw;height:80vh;"></div>
-	<script>
-
-		var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-			mapOption = { 
-				center: new kakao.maps.LatLng(37.610996866237016, 126.99723525390235), // 지도의 중심좌표
-				level: 7 // 지도의 확대 레벨
-			};
-
-		var map = new kakao.maps.Map(mapContainer, mapOption); 
-
-		var devicePositions = [
-			[37.610996866237016, 126.99723525390235, '국민대', 'N'],
-			[37.56837376710308, 126.97638465205124, '폴바셋', 'E'],
-		];
-
+<div class="container col-12">
+	<p>피보호자찾기 페이지</p>
+	<div class="row">
+		<div class="col-7">
+			<div id="map" style="width:100%;height:80vh;"></div>	
+		</div>
+		<div class="col-5">
 		
-		for(var i=0; i<devicePositions.length; i++) {
-			var infowindow = new kakao.maps.InfoWindow();
-			var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png"; 
+			<div class="detail-form-wrap">
+				<table class="table">
+					<thead>
+						<tr class="thead-dark">
+							<th>No.</th>
+							<th>기기닉네임</th>
+							<th>위치</th>
+							<th>요청</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% if device_list %}
+						{% for device in device_list %}
+						<tr>
+							<td>{{ forloop.counter }}</td>
+							<td>{{ device.nickname }}</td>
+							{% comment %} <td>{{ }}</td> {% endcomment %}
+							<td>디바이스 위치값 받아와서 넣어주기</td>
+							<th><button class="btn btn-warning"> 영상 요청 </button></th>
+						</tr>
+						{% endfor %}
+						{% else %}
+						<tr>
+							<td colspan="4">등록된 기기가 없습니다.</td>
+						</tr>
+						{% endif %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div> 
 
-			var data = devicePositions[i];
-			
-			if( data[3] == 'E')
-			{
-				var imageSize = new kakao.maps.Size(24, 35); 
-				var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
-				var marker = new kakao.maps.Marker({
-					position: new kakao.maps.LatLng(data[0], data[1]),
-					map: map,
-					image : markerImage,
-				});
-			}else{
-				var marker = new kakao.maps.Marker({
-					position: new kakao.maps.LatLng(data[0], data[1]),
-					map: map,
-					image : markerImage,
-				});
-			}
 
-			marker.title = data[2];
 
-			infowindow.setContent('<div>'+ marker.title+'</div>');
-			infowindow.setPosition(marker.getPosition());
-			infowindow.open(map, marker);
+
+<script>
+	var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+		mapOption = {
+			center: new kakao.maps.LatLng(37.610996866237016, 126.99723525390235), // 지도의 중심좌표
+			level: 8 // 지도의 확대 레벨
+		};
+
+	var map = new kakao.maps.Map(mapContainer, mapOption);
+
+	var devicePositions = [
+		[37.610996866237016, 126.99723525390235, '국민대', 'N'],
+		[37.56837376710308, 126.97638465205124, '폴바셋', 'E'],
+	];
+
+
+	for (var i = 0; i < devicePositions.length; i++) {
+		var infowindow = new kakao.maps.InfoWindow();
+		var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+
+		var data = devicePositions[i];
+
+		if (data[3] == 'E') {
+			var imageSize = new kakao.maps.Size(24, 35);
+			var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+			var marker = new kakao.maps.Marker({
+				position: new kakao.maps.LatLng(data[0], data[1]),
+				map: map,
+				image: markerImage,
+			});
+		} else {
+			var marker = new kakao.maps.Marker({
+				position: new kakao.maps.LatLng(data[0], data[1]),
+				map: map,
+				image: markerImage,
+			});
 		}
 
-	</script>	
+		marker.title = data[2];
+
+		infowindow.setContent('<div>' + marker.title + '</div>');
+		infowindow.setPosition(marker.getPosition());
+		infowindow.open(map, marker);
+	}
+</script>
 {% endblock %}
