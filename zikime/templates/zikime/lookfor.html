@@ -3,7 +3,7 @@
 {% block content %}
 <!-- services와 clusterer, drawing 라이브러리 불러오기 -->
 <script type="text/javascript"
-	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7e6e33fad9a4403b189b91203773fe8a&libraries=services,clusterer,drawing">
+	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=&libraries=services,clusterer,drawing">
 </script>
 
 <div class="container col-12">
@@ -30,14 +30,15 @@
 						<tr>
 							<td>{{ forloop.counter }}</td>
 							<td>{{ device.nickname }}</td>
-							{% comment %} <td>{{ }}</td> {% endcomment %}
+							{% comment %} <td><p id="pos{{forloop.counter}}">ddd</p></td> {% endcomment %}
 							<td>디바이스 위치값 받아와서 넣어주기</td>
 							<th><button class="btn btn-warning"> 영상 요청 </button></th>
 						</tr>
 						{% endfor %}
 						{% else %}
 						<tr>
-							<td colspan="4">등록된 기기가 없습니다.</td>
+							<td colspan="2">등록된 기기가 없습니다.</td>
+							<td><p id="pos">ddd</p></td>
 						</tr>
 						{% endif %}
 					</tbody>
@@ -51,26 +52,32 @@
 
 
 <script>
+	function searchDetailAddrFromCoords(coords, callback) {
+		// 좌표로 법정동 상세 주소 정보를 요청합니다
+		geocoder.coord2Address(coords.getLng(), coords.getLat(),callback);
+	}
 	var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
 		mapOption = {
 			center: new kakao.maps.LatLng(37.610996866237016, 126.99723525390235), // 지도의 중심좌표
 			level: 8 // 지도의 확대 레벨
 		};
-
+	var geocoder = new kakao.maps.services.Geocoder();		
+	
 	var map = new kakao.maps.Map(mapContainer, mapOption);
-
-	var devicePositions = [
+	// 주소-좌표 변환 객체를 생성
+	var devicePositions = [ //등록된 기기들의 위치 및 정보
 		[37.610996866237016, 126.99723525390235, '국민대', 'N'],
 		[37.56837376710308, 126.97638465205124, '폴바셋', 'E'],
 	];
 
-
+	//devicePostions의 개수만큼 infowindow 및 marker 생성
 	for (var i = 0; i < devicePositions.length; i++) {
 		var infowindow = new kakao.maps.InfoWindow();
 		var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
 
 		var data = devicePositions[i];
 
+		// device의 mode가 'E(Emergency)'일 경우와 'N(Normal)'일 경우 다른 색상 마커 생성
 		if (data[3] == 'E') {
 			var imageSize = new kakao.maps.Size(24, 35);
 			var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
@@ -85,13 +92,32 @@
 				map: map,
 				image: markerImage,
 			});
-		}
+		}//end if
 
-		marker.title = data[2];
+		marker.title = data[2]; //if문안에서 undefined가 출력됨
+		
+		infowindow.setContent('<div>' + marker.title + '</div>'); //infowindow 내용 설정
+		infowindow.setPosition(marker.getPosition()); //infowindow 표시 위치 설정
+		infowindow.open(map, marker); 
 
-		infowindow.setContent('<div>' + marker.title + '</div>');
-		infowindow.setPosition(marker.getPosition());
-		infowindow.open(map, marker);
-	}
+		var latlng = marker.getPosition();
+
+		
+		setInterval(searchDetailAddrFromCoords(latlng, function(result, status) {
+			if (status === kakao.maps.services.Status.OK) {
+				var detailAddr = !!result[0].road_address ? '<div>도로명주소 : ' + result[0].road_address.address_name + '</div>' : '';
+				detailAddr += '<div>지번 주소 : ' + result[0].address.address_name + '</div>';
+				
+				var content = '<div class="bAddr">' +
+					'<span class="title">(법정동)</span>' + 
+					detailAddr + 
+					'</div>';
+					var resultDiv = document.getElementById('pos');
+					resultDiv.innerHTML = content;
+					console.log(content); // 나중에 삭제
+				}   
+			}),1000);
+		}//end for
+			
 </script>
 {% endblock %}
