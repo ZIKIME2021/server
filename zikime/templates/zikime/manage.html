@@ -38,6 +38,14 @@
       box-sizing: border-box;
       padding: 0 10px;
    }
+   #nickname{
+      font-family: 'dotum';
+      border: 1px solid #ccc;
+      width: 100%;
+      height: 40px;
+      box-sizing: border-box;
+      padding: 0 10px;
+   }
 
 </style>
 
@@ -83,7 +91,7 @@
                         {{ device.nickname }}
                     </td>
                     <td>{{ device.created_at }}</td>
-                    <th><button class="btn btn-danger m-1" onclick="deletecheck()"> 기기제거</button><button class="btn btn-info m-1 "> 닉네임변경</button><a href="{% url 'detail'  %}"><button class="btn btn-success m-1 ">관리상세페이지</button></a> </th>
+                    <th><button class="btn btn-danger m-1" onclick="deletecheck()"> 기기제거</button><button class="btn btn-info m-1 "data-toggle="modal" data-target="#nicknameModal"> 닉네임변경</button><a href="{% url 'detail'  %}"><button class="btn btn-success m-1 ">관리상세페이지</button></a> </th>
                 </tr>
                 {% endfor %}
                 {% else %}
@@ -100,6 +108,23 @@
    </div>
 
 
+      <div class="modal fade" id="nicknameModal" tabindex="-1" role="dialog" aria-labelledby="nicknameModalLabel" aria-hidden="true">
+         <div class="modal-dialog">
+           <div class="modal-content">
+             <div class="modal-header">
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+               <h4 class="modal-title" id="nicknameModalLabel">닉네임 변경</h4>
+             </div>
+             <div class="modal-body">
+                  <input type="text" name="nickname" id="nickname" placeholder="닉네임" required>
+             </div>
+             <div class="modal-footer">
+               <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+               <button type="button" class="btn btn-primary">변경</button>
+             </div>
+           </div>
+         </div>
+      </div>
    <div style="text-align: center;">
       <button type="button" class="btn btn-primary mt-5 mb-5" data-toggle="modal" data-target="#deviceModal"> 기기등록하기
       </button>

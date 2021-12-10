@@ -2,21 +2,122 @@
 
 {% block content %}
 <!-- services와 clusterer, drawing 라이브러리 불러오기 -->
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=APIKEY&libraries=services,clusterer,drawing"></script>
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b15247550b818371280945e4938e919e"></script>
+<script type="text/javascript"
+	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=&libraries=services,clusterer,drawing">
+</script>
 
-{% comment %} <div class="container">
-    <p>피보호자찾기 페이지</p>
-    <div id="map" style="width:500px;height:400px;"></div><div id="map" style="width:500px;height:400px;"></div>
-	<script>
-		var container = document.getElementById('map');
-		var options = {
-			center: new kakao.maps.LatLng(33.450701, 126.570667),
-			level: 3
+<div class="container col-12">
+	<p>피보호자찾기 페이지</p>
+	<div class="row">
+		<div class="col-7">
+			<div id="map" style="width:100%;height:80vh;"></div>	
+		</div>
+		<div class="col-5">
+		
+			<div class="detail-form-wrap">
+				<table class="table">
+					<thead>
+						<tr class="thead-dark">
+							<th>No.</th>
+							<th>기기닉네임</th>
+							<th>위치</th>
+							<th>요청</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% if device_list %}
+						{% for device in device_list %}
+						<tr>
+							<td>{{ forloop.counter }}</td>
+							<td>{{ device.nickname }}</td>
+							{% comment %} <td><p id="pos{{forloop.counter}}">ddd</p></td> {% endcomment %}
+							<td>디바이스 위치값 받아와서 넣어주기</td>
+							<th><button class="btn btn-warning"> 영상 요청 </button></th>
+						</tr>
+						{% endfor %}
+						{% else %}
+						<tr>
+							<td colspan="2">등록된 기기가 없습니다.</td>
+							<td><p id="pos">ddd</p></td>
+						</tr>
+						{% endif %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div> 
+
+
+
+
+<script>
+	function searchDetailAddrFromCoords(coords, callback) {
+		// 좌표로 법정동 상세 주소 정보를 요청합니다
+		geocoder.coord2Address(coords.getLng(), coords.getLat(),callback);
+	}
+	var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+		mapOption = {
+			center: new kakao.maps.LatLng(37.610996866237016, 126.99723525390235), // 지도의 중심좌표
+			level: 8 // 지도의 확대 레벨
 		};
+	var geocoder = new kakao.maps.services.Geocoder();		
+	
+	var map = new kakao.maps.Map(mapContainer, mapOption);
+	// 주소-좌표 변환 객체를 생성
+	var devicePositions = [ //등록된 기기들의 위치 및 정보
+		[37.610996866237016, 126.99723525390235, '국민대', 'N'],
+		[37.56837376710308, 126.97638465205124, '폴바셋', 'E'],
+	];
 
-		var map = new kakao.maps.Map(container, options);
-	</script>
-</div> {% endcomment %}
+	//devicePostions의 개수만큼 infowindow 및 marker 생성
+	for (var i = 0; i < devicePositions.length; i++) {
+		var infowindow = new kakao.maps.InfoWindow();
+		var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
 
+		var data = devicePositions[i];
+
+		// device의 mode가 'E(Emergency)'일 경우와 'N(Normal)'일 경우 다른 색상 마커 생성
+		if (data[3] == 'E') {
+			var imageSize = new kakao.maps.Size(24, 35);
+			var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+			var marker = new kakao.maps.Marker({
+				position: new kakao.maps.LatLng(data[0], data[1]),
+				map: map,
+				image: markerImage,
+			});
+		} else {
+			var marker = new kakao.maps.Marker({
+				position: new kakao.maps.LatLng(data[0], data[1]),
+				map: map,
+				image: markerImage,
+			});
+		}//end if
+
+		marker.title = data[2]; //if문안에서 undefined가 출력됨
+		
+		infowindow.setContent('<div>' + marker.title + '</div>'); //infowindow 내용 설정
+		infowindow.setPosition(marker.getPosition()); //infowindow 표시 위치 설정
+		infowindow.open(map, marker); 
+
+		var latlng = marker.getPosition();
+
+		
+		setInterval(searchDetailAddrFromCoords(latlng, function(result, status) {
+			if (status === kakao.maps.services.Status.OK) {
+				var detailAddr = !!result[0].road_address ? '<div>도로명주소 : ' + result[0].road_address.address_name + '</div>' : '';
+				detailAddr += '<div>지번 주소 : ' + result[0].address.address_name + '</div>';
+				
+				var content = '<div class="bAddr">' +
+					'<span class="title">(법정동)</span>' + 
+					detailAddr + 
+					'</div>';
+					var resultDiv = document.getElementById('pos');
+					resultDiv.innerHTML = content;
+					console.log(content); // 나중에 삭제
+				}   
+			}),1000);
+		}//end for
+			
+</script>
 {% endblock %}
