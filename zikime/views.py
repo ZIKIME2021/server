@@ -1,5 +1,5 @@
 import json
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
 from django.db import models
 from zikime.models import CustomUser, Device, Regist, Serial
@@ -106,3 +106,8 @@ def detail_area(request):
     request,
     'zikime/detail_area.html',
 )
+
+def delete_device(request, pk):
+    device = get_object_or_404(Device, id=pk)
+    device.delete()
+    return redirect('/manage')

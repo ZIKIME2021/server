@@ -12,4 +12,5 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('detail/', views.detail, name='detail'),
     path('detail_area/', views.detail_area, name='detail_area'),
+    path('manage/<int:pk>/delete/', views.delete_device, name='delete_device')
 ]
