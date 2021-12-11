@@ -1,14 +1,15 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.db.models import constraints
 
-class CustomUser(User):
-    
-    def __str__(self):
-            return self.username
+from django.contrib.auth.models import AbstractUser
+# Create your models here.
+
+class CustomUser(AbstractUser):
+    username = models.CharField(max_length=100, db_column='UID', verbose_name='username', unique=True)
+    password = models.CharField(max_length=200, db_column='PW', verbose_name='password')
+    email = models.EmailField(max_length=50, db_column='EMAIL',verbose_name='email')
     
     class Meta:
-        proxy = True
         db_table = 'user'
         verbose_name = '사용자'
         verbose_name_plural = '사용자 리스트'
@@ -117,7 +118,7 @@ class Regist(models.Model):
         
 class Attachment(models.Model):
     device = models.ForeignKey(Device,db_column='Device_ID', verbose_name='디바이스ID', help_text='This value is automatically entered when the table is created.', on_delete=models.CASCADE)
-    user = models.ForeignKey(User,db_column='Owner_ID', verbose_name='소유자 ID', help_text='This value is automatically entered when the table is created.', on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser,db_column='Owner_ID', verbose_name='소유자 ID', help_text='This value is automatically entered when the table is created.', on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(db_column='CRE_DT', verbose_name='생성 날짜', help_text='This value is automatically entered when the table is created.', auto_now_add=True, null=True)
     
