@@ -2,64 +2,56 @@
 
 {% block content %}
 <style>
-    .signup-form-wrap{background-color:#f8f8f8;border-radius:20px;box-sizing:border-box;padding:20px 10px}
-    .signup-content{width:70%;display:table;margin:0 auto}
-    .signup-title{font-weight:bold;font-size:20px;padding-bottom:20px;}
+    .signup-form-wrap {
+        background-color: #f8f8f8;
+        border-radius: 20px;
+        box-sizing: border-box;
+        padding: 20px 10px
+    }
+
+    .signup-content {
+        width: 70%;
+        display: table;
+        margin: 0 auto
+    }
+
+    .signup-title {
+        font-weight: bold;
+        font-size: 20px;
+        padding-bottom: 20px;
+    }
 </style>
 
 <div class="container">
     <div class="signup-content">
-    <div class="row mt-5">
-        <!--여백추가 mt-5-->
-        <div class="signup-title">
-            회원가입
+        <div class="row mt-5">
+            <!--여백추가 mt-5-->
+            <div class="signup-title">
+                회원가입
+            </div>
+        </div>
+
+        <div class="signup-form-wrap">
+            <div class="col-12">
+                <form method="POST" action="{% url 'signup' %}">
+                    {% csrf_token %}
+                    <p>username</p>
+                    <input type="text" class="form-control" name="username">
+                    <br>
+                    <p>email</p>
+                    <input type="email" class="form-control" name="email">
+                    <br>
+                    <p>password</p>
+                    <input type="password" class="form-control" name="password">
+                    <br>
+                    <p>password confirm</p>
+                    <input type="password" class="form-control" name="re-password">
+                    <br>
+                    <input type="submit" class="btn btn-primary btn-block"value="회원가입">
+                </form>
+
+            </div>
         </div>
     </div>
-
-    <div class="signup-form-wrap">
-        <div class="col-12">
-            <form mothod="POST" action=".">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="username">사용자 이름</label>
-                    <input type="text" class="form-control" id="username" placeholder="사용자 이름" name="username">
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control" id="email" name="email"
-                        placeholder="Enter email">
-                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
-                        else.</small>
-                </div>
-                <div class="form-group">
-                    <label for="password">비밀번호</label>
-                    <input type="password" class="form-control" id="password" placeholder="비밀번호" name="password">
-                </div>
-                <div class="form-group">
-                    <label for="re-password">비밀번호</label>
-                    <input type="password" class="form-control" id="re-password" placeholder="비밀번호 확인"
-                        name="re-password">
-                </div>
-                <div class="form-group form-check">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                    <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                </div>
-                <button type="submit" class="btn btn-primary btn-block" onclick="signupcheck()">회원가입완료</button>
-            </form>
-
-        </div>
-    </div>
-    </div>
-    <script>
-        function signupcheck(){
-           var f = document.loginform;
-           var mb_email = f.mb_email.value;
-           var regex=/([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-  
-           if(!regex.test(mb_email)){
-              alert("이메일 형식을 체크해주세요.");
-              return false;
-           }
-        }
-     </script>
+</div>
 {% endblock %}

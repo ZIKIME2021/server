@@ -1,0 +1,49 @@
+{% extends 'zikime/base.html' %}
+
+{% block content %}
+<div class="container">
+   <!-- 기본 템플릿 안에 삽입될 내용 Start -->
+   <div class="row-center">
+      <style>
+         .login-title {
+            font-weight: bold;
+            font-size: 20px;
+            padding-bottom: 20px;
+         }
+
+         .login-content {
+            width: 70%;
+            display: table;
+            margin: 0 auto
+         }
+
+         .login-form-wrap {
+            background-color: #f8f8f8;
+            border-radius: 20px;
+            box-sizing: border-box;
+            padding: 20px 10px
+         }
+      </style>
+      
+      <div class="container">
+         <div class="login-content">
+            <h5 class="login-title">로그인 정보를 입력하세요</h5>
+            <div class="login-form-wrap">
+                <form method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <p>username</p>
+                    <input type="text" class="form-control" name="username">
+                    <br>
+                    <p>password</p>
+                    <input type="password" class="form-control" name="password">
+                    <br>
+                    <input type="submit" class="btn btn-primary btn-block" value="로그인">
+                </form>
+            </div>
+         </div>
+      </div>
+
+
+      <!-- 기본 템플릿 안에 삽입될 내용 End -->
+   </div>
+   {% endblock %}

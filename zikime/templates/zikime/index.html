@@ -3,45 +3,32 @@
 {% block content %}
 <div class="container">
    <!-- 기본 템플릿 안에 삽입될 내용 Start -->
-   <div class="row-center">
-      <style>
-         .index-title {
-            font-weight: bold;
-            font-size: 20px;
-            padding-bottom: 20px;
-         }
 
-         .index-content {
-            width: 70%;
-            display: table;
-            margin: 0 auto
-         }
-
-         .index-form-wrap {
-            background-color: #f8f8f8;
-            border-radius: 20px;
-            box-sizing: border-box;
-            padding: 20px 10px
-         }
-      </style>
-
-      <div class="container">
-         <div class="index-content">
-            <h5 class="index-title">로그인 정보를 입력하세요</h5>
-            <div class="index-form-wrap">
-               <form class="form-signin" method="POST" onSubmit="logincall();return false">
-                  <label for="username" class="sr-only">Your Username</label>
-                  <input type="text" id="username" class="form-control" placeholder="Your Username" required
-                     autofocus><BR>
-                  <label for="password" class="sr-only">Password</label>
-                  <input type="password" id="password" class="form-control" placeholder="Password" required><br>
-                  <button class="logon-btn btn-primary btn-block" type="submit">로 그 인</button>
-               </form>
-            </div>
-         </div>
+   {% if user.is_authenticated %}
+   <p>{{ user.username }}님 환영합니다!</p>
+   <h5>
+      오늘도 지키미와 함께 하세요:)
+   </h5>
+   </form>
+   {% else %}
+   <h4>
+      <p>
+         ZIKIME는 RaspberryPI4와 Arduino를 연결한 장치로써 Camera, Vibration motor, LED module이 장착되어 있습니다.<br><br>
+         현재까지는 다른 기기 네트워크에 의존하여 사용할 수 있는 정도까지 구현되어 있고, LTE모듈을 삽입하여 타 기기 의존도를 없애도록 할 것입니다.<br><br>
+         ZIKIME기기를 등록한 보호자는 Owner가 되어 다른 보호자들을 등록, 삭제 할 수있는 권한을 가지고 있으며,<br><br>
+         여러 기기의 위치를 한 지도에서 동시에 볼 수 있습니다.<br><br>
+      </p>
+   </h4>
+   <div class="row">
+      <div class="col-12">
+         <h1><a href="{% url 'login' %}">👉🏻로그인</a></h1>
+         <h1><a href="{% url 'signup' %}">👉🏻회원가입</a>
       </div>
-
-
-      <!-- 기본 템플릿 안에 삽입될 내용 End -->
    </div>
-   {% endblock %}
+   {% endif %}
+
+
+
+   <!-- 기본 템플릿 안에 삽입될 내용 End -->
+</div>
+{% endblock %}
