@@ -141,19 +141,6 @@
 			}//end for
 	}
 
-	function PrintCnt(){
-		var xhr = new XMLHttpRequest;
-		xhr.open("GET", "http://www.zikime.com:9999/state/1", true)
-		xhr.onreadystatechange = function() {
-                    if (xhr.readyState === XMLHttpRequest.DONE) {
-						var json = xhr.responseText;
-						var jsonObject = JSON.parse(json)
-						document.getElementById("result").innerHTML = "씨발"+jsonObject["latitude"]+","+jsonObject["longitude"];
-		}
-	}
-	xhr.send()
-	}
-
 	function StartRequest(){
 		UpdateMap();
 		functId = setInterval(UpdateMap, 1000);
