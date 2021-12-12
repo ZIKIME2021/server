@@ -136,3 +136,9 @@ def logout(request):
 
 def index(request):
     return render(request, 'zikime/index.html')
+
+
+def sos_request(request, serial):
+    if request.method == 'GET':
+        print(serial)
+        return JsonResponse({'result': True}, status=200)
