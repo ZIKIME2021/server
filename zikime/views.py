@@ -89,7 +89,7 @@ def detail(request):
     context = {
         'guest_list': users,
     }
-    
+
     return render(
     request,
     'zikime/detail.html',
@@ -168,3 +168,9 @@ def sos_request(request, serial):
 def history_save(request):
     if request.method == 'POST':
         return
+
+
+def delete_guest(request, username):
+    user = Regist.objects.get(user=CustomUser.objects.get(username=username))
+    user.delete()
+    return redirect('/detail')

@@ -17,5 +17,6 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('logout/', views.logout, name='logout'),
     path('sos/<str:serial>/', views.sos_request, name='sos_request'),
+    path('detail/delete_guest/<str:username>', views.delete_guest, name='delete_guest'),
 ]
 
