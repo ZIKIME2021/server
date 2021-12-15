@@ -54,20 +54,22 @@
 
 
 <script>
+	var markers = [];
+	var infos = [];
 	function searchDetailAddrFromCoords(coords, callback) {
 		// 좌표로 법정동 상세 주소 정보를 요청합니다
 		// geocoder.coord2Address(coords.getLng(), coords.getLat(),callback);	
 	}
 
-	function UpdateMap(){
-		var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-		mapOption = {
+	var mapOption = {
 			center: new kakao.maps.LatLng(37.610996866237016, 126.99723525390235), // 지도의 중심좌표
 			level: 8 // 지도의 확대 레벨
 		};
-		var geocoder = new kakao.maps.services.Geocoder();		
-		
-		var map = new kakao.maps.Map(mapContainer, mapOption);
+	var mapContainer = document.getElementById('map'); // 지도를 표시할 div 
+	var geocoder = new kakao.maps.services.Geocoder();		
+	var map = new kakao.maps.Map(mapContainer, mapOption);
+
+	function UpdateMap(){
 
 		// 주소-좌표 변환 객체를 생성
 		var devicePositions = [ //등록된 기기들의 위치 및 정보
@@ -92,6 +94,13 @@
 		xhr.send();
 
 		//devicePostions의 개수만큼 infowindow 및 marker 생성
+		for(var i = 0; i < markers.length; i++){
+			markers[i].setMap(null);
+		}
+		for(var i = 0; i < infos.length; i++){
+			infos[i].close();
+		}
+		markers = [];
 		for (var i = 0; i < devicePositions.length; i++) {
 			var infowindow = new kakao.maps.InfoWindow();
 			var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
@@ -108,11 +117,14 @@
 					map: map,
 					image: markerImage,
 				});
+				markers.push(marker)
 			} else {
 				var marker = new kakao.maps.Marker({
 					position: new kakao.maps.LatLng(data[0], data[1]),
 					map: map,
+					image: null
 				});
+				markers.push(marker)
 			}//end if
 
 			marker.title = data[2]; //if문안에서 undefined가 출력됨
@@ -120,6 +132,8 @@
 			infowindow.setContent('<div>' + marker.title + '</div>'); //infowindow 내용 설정
 			infowindow.setPosition(marker.getPosition()); //infowindow 표시 위치 설정
 			infowindow.open(map, marker); 
+
+			infos.push(infowindow);
 
 			var latlng = marker.getPosition();
 

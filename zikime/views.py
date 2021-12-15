@@ -142,3 +142,8 @@ def sos_request(request, serial):
     if request.method == 'GET':
         print(serial)
         return JsonResponse({'result': True}, status=200)
+
+
+def history_save(request):
+    if request.method == 'POST':
+        return
