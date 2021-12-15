@@ -4,6 +4,7 @@ from django.http import HttpResponse, JsonResponse
 from django.db import models
 from zikime.models import CustomUser, Device, Regist, Serial
 from django.contrib import auth
+from django.views.decorators.csrf import csrf_exempt
 
 def is_resistered(request):
     if request.method == 'GET':
@@ -69,10 +70,31 @@ def mypage(request):
     )
 
 
+@csrf_exempt
 def detail(request):
+    if request.method == 'POST':
+        p = Regist.objects.create(
+            user = CustomUser.objects.get(username=request.POST['protector-username']),
+            role = Regist.ROLE_GUEST,
+            device= Device.objects.get(serial=Serial.objects.get(serial_number=2).serial_number)
+        )
+        print(request.POST)
+        # print(request.POST['protector-email'])
+    
+    users = set()
+    print(Regist.objects.all())
+    for e in Regist.objects.all():
+        print(type(e))
+        users.add(e)
+
+    print(users)
+    context = {
+        'guest_list': users
+    }
     return render(
     request,
     'zikime/detail.html',
+    context,
 )
 
 def detail_area(request):
