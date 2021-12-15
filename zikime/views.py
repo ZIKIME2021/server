@@ -82,15 +82,14 @@ def detail(request):
         # print(request.POST['protector-email'])
     
     users = set()
-    print(Regist.objects.all())
     for e in Regist.objects.all():
         print(type(e))
         users.add(e)
 
-    print(users)
     context = {
-        'guest_list': users
+        'guest_list': users,
     }
+    
     return render(
     request,
     'zikime/detail.html',
