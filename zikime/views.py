@@ -5,6 +5,7 @@ from django.db import models
 from zikime.models import CustomUser, Device, Regist, Serial
 from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
+import requests
 
 def is_resistered(request):
     if request.method == 'GET':
@@ -174,3 +175,18 @@ def delete_guest(request, username):
     user = Regist.objects.get(user=CustomUser.objects.get(username=username))
     user.delete()
     return redirect('/detail')
+
+
+def regist_device(request):
+    regist_num = request.GET['device-number']
+    URL = "http://www.zikime.com:9999/register_device/" + regist_num
+    print(URL)
+    response = requests.get(URL)
+    res_json = response.json()
+
+    Device.objects.create(
+        serial = Serial.objects.get(serial_number=res_json['serial']),
+        gps_module_info = res_json['gps_info'],
+        camera_module_info = res_json['camera_info'],
+    )
+    return redirect('/manage')

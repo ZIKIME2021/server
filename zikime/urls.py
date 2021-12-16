@@ -18,5 +18,6 @@ urlpatterns = [
     path('logout/', views.logout, name='logout'),
     path('sos/<str:serial>/', views.sos_request, name='sos_request'),
     path('detail/delete_guest/<str:username>', views.delete_guest, name='delete_guest'),
+    path('manage/regist_device/', views.regist_device, name='regist_device'),
 ]
 

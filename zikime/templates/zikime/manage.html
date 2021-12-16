@@ -136,13 +136,15 @@
                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                <h4 class="modal-title" id="diviceModalLabel">기기등록</h4>
              </div>
-             <div class="modal-body">
-                  <input type="text" name="device-number" id="device-number" placeholder="등록번호" required>
-             </div>
-             <div class="modal-footer">
-               <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
-               <button type="button" class="btn btn-primary">등록</button>
-             </div>
+             <form action="/manage/regist_device/">
+                <div class="modal-body">
+                   <input type="text" name="device-number" id="device-number" placeholder="등록번호" required>
+                </div>
+                <div class="modal-footer">
+                   <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+                   <input type="submit" class="btn btn-primary" value="등록">
+                </div>
+             </form>
            </div>
          </div>
       </div>
