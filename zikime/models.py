@@ -24,7 +24,7 @@ class CustomUser(AbstractUser):
 
 class Device(models.Model):
     serial = models.CharField(db_column='Serial_ID', max_length=100, verbose_name='시리얼 번호', help_text='This value is automatically entered by reference.')
-    master = models.ForeignKey(CustomUser, db_column='Master', verbose_name='마스터', related_name='master', on_delete=models.CASCADE)
+    master = models.ForeignKey(CustomUser, db_column='Master', verbose_name='마스터', related_name='master', on_delete=models.CASCADE, default='')
     nickname = models.CharField(db_column='Nickname',verbose_name='기기 닉네임', default='닉네임 없음', max_length=30 )
     created_at = models.DateTimeField(db_column='CRE_DT', verbose_name='생성 날짜', help_text='This value is automatically entered when the table is created.', auto_now_add=True, null=True, blank=True)
     def __str__(self):

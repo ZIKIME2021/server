@@ -7,7 +7,7 @@ from . import models # 👈 해당 model이 존재하는 파일을 import
 class CustomUserAdmin(admin.ModelAdmin):
     list_filter = ('date_joined',)
     list_display = ('username', 'email', 'date_joined' )
-    fields = ('username', 'email', 'date_joined',)
+    fields = ('username', 'email', 'password', 'date_joined',)
     search_fields = ['username',]
     
 @admin.register(models.Device)

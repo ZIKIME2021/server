@@ -5,6 +5,7 @@ from django.db import models
 from zikime.models import CustomUser, Device
 from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 import requests
 
 def is_resistered(request):
@@ -42,18 +43,14 @@ def search(request):
         'zikime/search.html',
     )
     
+
+@login_required
 def manage(request):
 
     devices = set()
     
-    for e in Device.objects.select_related('serial'):
-        # select_related ()가 없으면 각각에 대한 데이터베이스 쿼리가 생성됩니다.
-    # 각 항목에 대한 관련 블로그를 가져 오기위한 반복 반복.
-        devices.add(e)
-    # regist_list = Regist.objects.all()
-    # regist_device_list = Device.objects.filter(seirregist_list.divice)
-    # regist_list = Regist.objects.allselect_related('device__serial');
-    # device_list = Regist.objects.select_related('user').all()
+    for e in Device.objects.filter(master=request.user):
+        devices.add(e)    
 
     #TODO devi ec 에서 정보 받아오기
     return render(
@@ -63,6 +60,7 @@ def manage(request):
             'device_list':devices
         }
     )
+
 
 def mypage(request):
     return render(
