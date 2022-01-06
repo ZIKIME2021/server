@@ -2,7 +2,7 @@ import json
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
 from django.db import models
-from zikime.models import CustomUser, Device, Regist, Serial
+from zikime.models import CustomUser, Device
 from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
 import requests

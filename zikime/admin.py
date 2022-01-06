@@ -9,22 +9,41 @@ class CustomUserAdmin(admin.ModelAdmin):
     list_display = ('username', 'email', 'date_joined' )
     fields = ('username', 'email', 'date_joined',)
     search_fields = ['username',]
-
-
+    
 @admin.register(models.Device)
 class DeviceAdmin(admin.ModelAdmin):
     list_filter = ('created_at',)
     list_display = ('serial', 'master', 'nickname')
-    fields = ('serial', 'master', 'nickname', 'created_at')
-
-
+    fieldsets = (
+        (None, {
+            "fields": ('master',),
+        }),
+        ('device', {
+            'fields':('serial', 'nickname')
+        }),
+    )
+    
+# @admin.register(models.Attachment)
+# class AttachmentAdmin(admin.ModelAdmin):
+#     list_filter = ('created_at',)
+#     list_display = ('device', 'user', 'saved_path', 'created_at')
+#     fieldsets = (
+#         (None, {
+#             "fields": (
+#                 'device', 'user'
+#             ),
+#         }),
+#         ('Data', {
+#             'fields': (
+#                 'saved_path',
+#             )
+#         }),
+#     )
+    
 @admin.register(models.Guest)
 class GuestAdmin(admin.ModelAdmin):
-    list_filter = ('created_at',)
-    list_display = ('device', 'user',)
-    fields = ('device', 'user', 'created_at')
+    list_display = ('device', 'user')
 
-    
 @admin.register(models.History)
 class HistoryAdmin(admin.ModelAdmin):
     list_filter = ('created_at',)
