@@ -9,87 +9,21 @@ class CustomUserAdmin(admin.ModelAdmin):
     list_display = ('username', 'email', 'date_joined' )
     fields = ('username', 'email', 'date_joined',)
     search_fields = ['username',]
+
+
 @admin.register(models.Device)
 class DeviceAdmin(admin.ModelAdmin):
     list_filter = ('created_at',)
-    list_display = ('serial', 'camera_module_info', 'gps_module_info')
-    fieldsets = (
-        (None, {
-            "fields": ('serial',),
-        }),
-        ('Module', {
-            'fields':('camera_module_info', 'gps_module_info')
-        }),
-    )
-    
+    list_display = ('serial', 'master', 'nickname')
+    fields = ('serial', 'master', 'nickname', 'created_at')
 
-@admin.register(models.Status)
-class StatusAdmin(admin.ModelAdmin):
-    list_filter = ('latest_updated_at',)
-    list_display = ('device', 'ONF', 'mode', 'IP', 'latitude', 'longitude', 'altitude')
-    fieldsets = (
-        (None, {
-            'fields':('device', 'IP')
-        }),
-        ('Status',{
-            'fields':('ONF', 'mode')
-        }),
-        ('GPS', {
-            'fields':('latitude', 'longitude', 'altitude')
-        }),
-    )
-    search_fields = ['mode','ONF',]
-    
 
-@admin.register(models.Serial)
-class SerialAdmin(admin.ModelAdmin):
-    list_filter = ('created_at','deleted_at')
-    list_display = ('serial_number', 'created_at', 'deleted_at' )
-    fieldsets = (
-        (None, {
-            "fields": (
-                'serial_number',
-            ),
-        }),
-    )
-    search_fields = ['serial_number',]
-    
-
-@admin.register(models.Regist)
-class RegistAdmin(admin.ModelAdmin):
-    list_filter = ('created_at', 'changed_at')
-    list_display = ('device', 'user', 'role', 'created_at', 'changed_at')
-    fieldsets = (
-        (None, {
-            "fields": (
-                'device',
-            )
-        }),
-        ('Connecting',{
-            'fields':(
-                'user', 'role'
-            )
-        }),
-    )
-    search_fields = [ 'role',]
-    
-
-@admin.register(models.Attachment)
-class AttachmentAdmin(admin.ModelAdmin):
+@admin.register(models.Guest)
+class GuestAdmin(admin.ModelAdmin):
     list_filter = ('created_at',)
-    list_display = ('device', 'user', 'saved_path', 'created_at')
-    fieldsets = (
-        (None, {
-            "fields": (
-                'device', 'user'
-            ),
-        }),
-        ('Data', {
-            'fields': (
-                'saved_path',
-            )
-        }),
-    )
+    list_display = ('device', 'user',)
+    fields = ('device', 'user', 'created_at')
+
     
 @admin.register(models.History)
 class HistoryAdmin(admin.ModelAdmin):

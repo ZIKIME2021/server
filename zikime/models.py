@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import constraints
 
 from django.contrib.auth.models import AbstractUser
+from django.db.models.deletion import CASCADE
 # Create your models here.
 
 class CustomUser(AbstractUser):
@@ -14,7 +15,7 @@ class CustomUser(AbstractUser):
             return self.username
     
     class Meta:
-        proxy = True
+        # proxy = True
         db_table = 'user'
         verbose_name = '사용자'
         verbose_name_plural = '사용자 리스트'
@@ -23,8 +24,9 @@ class CustomUser(AbstractUser):
 
 class Device(models.Model):
     serial = models.CharField(db_column='Serial_ID', verbose_name='시리얼 번호', help_text='This value is automatically entered by reference.')
-    master = models.ForeignKey(CustomUser, db_column='Master', verbose_name='마스터', related_name='master')
+    master = models.ForeignKey(CustomUser, db_column='Master', verbose_name='마스터', related_name='master', on_delete=models.CASCADE)
     nickname = models.CharField(db_column='Nickname',verbose_name='기기 닉네임', default='닉네임 없음', max_length=30 )
+    created_at = models.DateTimeField(db_column='CRE_DT', verbose_name='디바이스 등록 날짜', help_text='This value is automatically entered when the table is created.',auto_now_add=True,  null=True)
     def __str__(self):
             return self.serial
     
@@ -41,8 +43,8 @@ class Device(models.Model):
         ]
 
 class Guest(models.Model):
-    device = models.ForeignKey(Device, db_column='Device', verbose_name='디바이스 id', related_name='device')
-    user = models.ForeignKey(CustomUser, db_column='User', verbose_name='유저 id', related_name='user')
+    device = models.ForeignKey(Device, db_column='Device', verbose_name='디바이스 id', related_name='device', on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, db_column='User', verbose_name='유저 id', related_name='user', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.user.username
