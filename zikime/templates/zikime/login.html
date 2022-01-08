@@ -24,7 +24,7 @@
             padding: 20px 10px
          }
       </style>
-      
+
       <div class="container">
          <div class="login-content">
             <h5 class="login-title">로그인 정보를 입력하세요</h5>
@@ -32,7 +32,7 @@
                 <form method="POST" action="{% url 'login' %}">
                     {% csrf_token %}
                     <p>username</p>
-                    <input type="text" class="form-control" name="username">
+                    <input type="text" class="form-control" name="username" value={{username}}>
                     <br>
                     <p>password</p>
                     <input type="password" class="form-control" name="password">

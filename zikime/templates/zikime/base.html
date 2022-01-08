@@ -16,11 +16,10 @@
 
     <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-
-
 </head>
 
 <body>
+    
     <style>
         @media (max-width:1200px) {
             .login-wrap {
@@ -34,9 +33,12 @@
             }
         }
     </style>
+
     <div class="row">
         {%include 'zikime/navbar.html' %}
     </div>
+
+
 
     <!-- 기본 템플릿 안에 삽입될 내용 Start -->
     <div class="row-center">
@@ -44,9 +46,18 @@
         {% endblock %}
     </div>
     <!-- 기본 템플릿 안에 삽입될 내용 End -->
-
+    {%include 'zikime/footer.html' %}
 </body>
 
-{%include 'zikime/footer.html' %}
+
+
 
 </html>
+
+<script>
+    setTimeout(function () {
+
+        // Closing the alert
+        $('#message-alert').alert('close');
+    }, 3000);
+</script>
