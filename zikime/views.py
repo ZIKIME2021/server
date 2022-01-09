@@ -2,7 +2,7 @@ import json
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
 from django.db import models
-from zikime.models import CustomUser, Device
+from zikime.models import CustomUser, Device, Guest
 from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -52,7 +52,6 @@ def manage(request):
     for e in Device.objects.filter(master=request.user):
         devices.add(e)    
 
-    #TODO devi ec 에서 정보 받아오기
     return render(
         request,
         'zikime/manage.html',
@@ -71,28 +70,21 @@ def mypage(request):
 
 @csrf_exempt
 def detail(request):
+    print('hello')
     if request.method == 'POST':
-        p = Regist.objects.create(
-            user = CustomUser.objects.get(username=request.POST['protector-username']),
-            role = Regist.ROLE_GUEST,
-            device= Device.objects.get(serial=Serial.objects.get(serial_number=2).serial_number)
-        )
+        # p = Guest.objects.create(
+        #     user = CustomUser.objects.get(username=request.POST['protector-username']),
+        #     device= Device.objects.get(serial=.objects.get(serial_number=2).serial_number)
+        # )
         print(request.POST)
         # print(request.POST['protector-email'])
-    
-    users = set()
-    for e in Regist.objects.all():
-        print(type(e))
-        users.add(e)
 
     context = {
-        'guest_list': users,
     }
 
     return render(
     request,
     'zikime/detail.html',
-    context,
 )
 
 def detail_area(request):

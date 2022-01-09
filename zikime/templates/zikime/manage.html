@@ -91,7 +91,7 @@
                         {{ device.nickname }}
                     </td>
                     <td>{{ device.created_at }}</td>
-                    <th><a href="/manage/{{device.id}}/delete"><button class="btn btn-danger m-1" onclick="deletecheck()"> 기기제거</button></a><button class="btn btn-info m-1 "data-toggle="modal" data-target="#nicknameModal"> 닉네임변경</button><a href="{% url 'detail'  %}"><button class="btn btn-success m-1 ">관리상세페이지</button></a> </th>
+                    <th><a href="/manage/{{device.id}}/delete"><button class="btn btn-danger m-1" onclick="deletecheck()"> 기기제거</button></a><button class="btn btn-info m-1 "data-toggle="modal" data-target="#nicknameModal"> 닉네임변경</button><a href="/manage/detail"><button class="btn btn-success m-1 ">관리상세페이지</button></a> </th>
                 </tr>
                 {% endfor %}
                 {% else %}
