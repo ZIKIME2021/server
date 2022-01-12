@@ -167,8 +167,10 @@ def index(request):
 
 def sos_request(request, serial):
     if request.method == 'GET':
-        print(serial)
-        return JsonResponse({'result': True}, status=200)
+        device_id = request.GET['device_id']
+        email_list = set()
+        for guest in Guest.objects.filter(device = device_id):
+            email_list.add(CustomUser.objects.get(username=guest)['email'])
 
 
 def history_save(request):
@@ -199,3 +201,12 @@ def regist_device(request):
         # alert incorrect regist_number
         pass
     return redirect('/manage')
+
+
+# NOT COMPLETE
+def sos_api(request):
+    if request.method == 'GET':
+        device_id = request.GET['device_id']
+        email_list = set()
+        for guest in Guest.objects.filter(device = device_id):
+            email_list.add(CustomUser.objects.get(username=guest)['email'])
