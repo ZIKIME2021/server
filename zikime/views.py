@@ -185,14 +185,17 @@ def delete_guest(request, fk):
 
 def regist_device(request):
     regist_num = request.GET['device-number']
-    URL = "http://www.zikime.com:9999/register_device/" + regist_num
+    URL = "http://www.zikime.com:9999/device-management/register/" + regist_num
     print(URL)
     response = requests.get(URL)
     res_json = response.json()
 
-    Device.objects.create(
-        serial = Serial.objects.get(serial_number=res_json['serial']),
-        gps_module_info = res_json['gps_info'],
-        camera_module_info = res_json['camera_info'],
-    )
+    if res_json['registered']:
+        Device.objects.create(
+            master = request.user,
+            serial = res_json['serial'],
+        )
+    else:
+        # alert incorrect regist_number
+        pass
     return redirect('/manage')
