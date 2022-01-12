@@ -6,13 +6,14 @@ from django.db.models.deletion import CASCADE
 # Create your models here.
 
 class CustomUser(AbstractUser):
-
+    
     username = models.CharField(max_length=100, db_column='UID', verbose_name='username', unique=True)
     password = models.CharField(max_length=200, db_column='PW', verbose_name='password')
     email = models.EmailField(max_length=50, db_column='EMAIL',verbose_name='email')
     
     def __str__(self):
             return self.username
+    
     
     class Meta:
         # proxy = True

@@ -1,12 +1,15 @@
 import json
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
 from django.db import models
+from zikime.forms import UserForm
 from zikime.models import CustomUser, Device
 from django.contrib import auth, messages
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 import requests
+from django.urls import reverse
 
 def is_resistered(request):
     if request.method == 'GET':
@@ -120,19 +123,22 @@ def delete_device(request, pk):
     device.delete()
     return redirect('/manage')
 
-# 회원 가입
+
 def signup(request):
-    # signup 으로 POST 요청이 왔을 때, 새로운 유저를 만드는 절차를 밟는다.
+    form = UserForm(request.POST or None)
     if request.method == 'POST':
-        # password와 confirm에 입력된 값이 같다면
-        if request.POST['password'] == request.POST['re-password']:
-            # user 객체를 새로 생성
-            user = CustomUser.objects.create_user(username=request.POST['username'], password=request.POST['password'], email=request.POST['email'])
-            # 로그인 한다
-            auth.login(request, user)
-            return redirect('/')
-    # signup으로 GET 요청이 왔을 때, 회원가입 화면을 띄워준다.
-    return render(request, 'zikime/signup.html')
+        if form.is_valid():
+            form.save()
+            messages.success(request,'회원가입 성공! 로그인을 해주세요.', )
+            return render(request, 'zikime/login.html')
+            return HttpResponseRedirect('/')
+        else:
+            pass
+            messages.error(request,'가입정보를 다시 입력해주세요.')
+    else:
+        messages.success(request,'get')
+        
+    return render(request, 'zikime/signup.html', {'form':form,})
 
 # 로그인
 def login(request): 
