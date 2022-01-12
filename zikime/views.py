@@ -68,30 +68,45 @@ def mypage(request):
     )
 
 
+
+# 선택된 기기에 대한 정보를 GET으로 parameter 보내주기
 @csrf_exempt
 def detail(request):
-    print('hello')
-    if request.method == 'POST':
-        # p = Guest.objects.create(
-        #     user = CustomUser.objects.get(username=request.POST['protector-username']),
-        #     device= Device.objects.get(serial=.objects.get(serial_number=2).serial_number)
-        # )
-        print(request.POST)
-        # print(request.POST['protector-email'])
+    if request.method == 'GET':
+        guests = set()
+        device_id = request.GET.get('device_id')
+        device = Device.objects.get(id=device_id)
+        for guest in Guest.objects.filter(device=device_id):
+            guests.add(guest)
 
     context = {
+        'device':device,
+        'guest_list':guests,
     }
 
     return render(
     request,
     'zikime/detail.html',
-)
+    context,    
+    )
 
 def detail_area(request):
     return render(
     request,
     'zikime/detail_area.html',
 )
+
+def add_guest(request):
+
+    if request.method == 'POST':
+        device_id = request.GET['device_id']
+        p = Guest.objects.create(
+            user = CustomUser.objects.get(username=request.POST['protector-username']),
+            device= Device.objects.get(id=device_id)
+        )
+        # print(request.POST['protector-email'])
+    
+    return redirect('/manage/detail/?device_id='+device_id)
 
 def delete_device(request, pk):
     device = get_object_or_404(Device, id=pk)
@@ -161,10 +176,11 @@ def history_save(request):
         return
 
 
-def delete_guest(request, username):
-    user = Regist.objects.get(user=CustomUser.objects.get(username=username))
+def delete_guest(request, fk):
+    next = request.GET['next']
+    user = Guest.objects.filter(user=fk)
     user.delete()
-    return redirect('/detail')
+    return redirect('/manage/detail/?device_id='+next)
 
 
 def regist_device(request):

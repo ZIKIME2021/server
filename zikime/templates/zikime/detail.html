@@ -33,7 +33,7 @@
 
 <div class="container">
     <div class="detail-title">
-        'username'기기정보(보호자 / 안심지역)
+        {{ device.nickname }}기기정보(보호자 / 안심지역)
     </div>
 
 
@@ -75,7 +75,7 @@
                         <td>{{ forloop.counter }}</td>
                         <td>{{ guest.user.username }}</td>
                         <td>{{ guest.user.email }}</td>
-                        <th><button class="btn btn-warning m-1"> 권한 양도 </button><button class="btn btn-danger"> <a href="/detail/delete_guest/{{ guest.user.username }}">보호자삭제</a>
+                        <th><button class="btn btn-warning m-1"> 권한 양도 </button><button class="btn btn-danger"> <a href="/detail/delete_guest/{{ guest.user.id }}?next={{device.id}}">보호자삭제</a>
                             </button></th>
                     </tr>
                     {% endfor %}
@@ -101,7 +101,8 @@
                 <h4 class="modal-title" id="addProtectorLabel">보호자 정보 입력</h4>
             </div>
             <div class="modal-body">
-                <form action="/detail/" method="POST">
+                <form action="/manage/detail/add_guest/?device_id={{ device.id }}" method="POST">
+                    {% csrf_token %}
                     <div class="form-group">
                         <label for="protector-username" class="control-label">보호자 Username</label>
                         <input type="text" class="form-control" id="protector-username" name="protector-username">
