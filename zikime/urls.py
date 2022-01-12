@@ -10,14 +10,15 @@ urlpatterns = [
     path('manage/',views.manage, name='manage'),
     path('mypage/', views.mypage, name='mypage'),
     path('signup/', views.signup, name='signup'),
-    path('detail/', views.detail, name='detail'),
+    path('manage/detail/add_guest/', views.add_guest, name='add_guest'),
+    path('manage/detail/', views.detail, name='detail'),
     path('detail_area/', views.detail_area, name='detail_area'),
     path('manage/<int:pk>/delete/', views.delete_device, name='delete_device'),
     path('login/',views.login, name='login'),
     path('signup/', views.signup, name='signup'),
     path('logout/', views.logout, name='logout'),
     path('sos/<str:serial>/', views.sos_request, name='sos_request'),
-    path('detail/delete_guest/<str:username>', views.delete_guest, name='delete_guest'),
+    path('detail/delete_guest/<int:fk>', views.delete_guest, name='delete_guest'),
     path('manage/regist_device/', views.regist_device, name='regist_device'),
 ]
 

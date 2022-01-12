@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
 from django.db import models
 from zikime.forms import UserForm
-from zikime.models import CustomUser, Device
+from zikime.models import CustomUser, Device, Guest
 from django.contrib import auth, messages
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -69,7 +69,6 @@ def manage(request):
     for e in Device.objects.filter(master=request.user):
         devices.add(e)    
 
-    #TODO devi ec 에서 정보 받아오기
     return render(
         request,
         'zikime/manage.html',
@@ -86,37 +85,45 @@ def mypage(request):
     )
 
 
+
+# 선택된 기기에 대한 정보를 GET으로 parameter 보내주기
 @csrf_exempt
 def detail(request):
-    if request.method == 'POST':
-        p = Regist.objects.create(
-            user = CustomUser.objects.get(username=request.POST['protector-username']),
-            role = Regist.ROLE_GUEST,
-            device= Device.objects.get(serial=Serial.objects.get(serial_number=2).serial_number)
-        )
-        print(request.POST)
-        # print(request.POST['protector-email'])
-    
-    users = set()
-    for e in Regist.objects.all():
-        print(type(e))
-        users.add(e)
+    if request.method == 'GET':
+        guests = set()
+        device_id = request.GET.get('device_id')
+        device = Device.objects.get(id=device_id)
+        for guest in Guest.objects.filter(device=device_id):
+            guests.add(guest)
 
     context = {
-        'guest_list': users,
+        'device':device,
+        'guest_list':guests,
     }
 
     return render(
     request,
     'zikime/detail.html',
-    context,
-)
+    context,    
+    )
 
 def detail_area(request):
     return render(
     request,
     'zikime/detail_area.html',
 )
+
+def add_guest(request):
+
+    if request.method == 'POST':
+        device_id = request.GET['device_id']
+        p = Guest.objects.create(
+            user = CustomUser.objects.get(username=request.POST['protector-username']),
+            device= Device.objects.get(id=device_id)
+        )
+        # print(request.POST['protector-email'])
+    
+    return redirect('/manage/detail/?device_id='+device_id)
 
 def delete_device(request, pk):
     device = get_object_or_404(Device, id=pk)
@@ -197,22 +204,26 @@ def history_save(request):
         return
 
 
-def delete_guest(request, username):
-    user = Regist.objects.get(user=CustomUser.objects.get(username=username))
+def delete_guest(request, fk):
+    next = request.GET['next']
+    user = Guest.objects.filter(user=fk)
     user.delete()
-    return redirect('/detail')
+    return redirect('/manage/detail/?device_id='+next)
 
 
 def regist_device(request):
     regist_num = request.GET['device-number']
-    URL = "http://www.zikime.com:9999/register_device/" + regist_num
+    URL = "http://www.zikime.com:9999/device-management/register/" + regist_num
     print(URL)
     response = requests.get(URL)
     res_json = response.json()
 
-    Device.objects.create(
-        serial = Serial.objects.get(serial_number=res_json['serial']),
-        gps_module_info = res_json['gps_info'],
-        camera_module_info = res_json['camera_info'],
-    )
+    if res_json['registered']:
+        Device.objects.create(
+            master = request.user,
+            serial = res_json['serial'],
+        )
+    else:
+        # alert incorrect regist_number
+        pass
     return redirect('/manage')
