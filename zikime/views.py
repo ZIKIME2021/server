@@ -1,12 +1,15 @@
 import json
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
 from django.db import models
+from zikime.forms import UserForm
 from zikime.models import CustomUser, Device, Guest
-from django.contrib import auth
+from django.contrib import auth, messages
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 import requests
+from django.urls import reverse
 
 def is_resistered(request):
     if request.method == 'GET':
@@ -31,11 +34,25 @@ def index(request):
         'zikime/index.html',
     )
 
+@login_required
 def lookfor(request):
+    devices = set()
+    for e in Device.objects.filter(master=request.user):
+        devices.add(e)
+        
+    # TODO:
+    # GUEST로 있는 기기들의 목록도 가져와야함.
+    
     return render(
         request,
         'zikime/lookfor.html',
+        {
+            'device_list':devices
+        }
     )
+    
+    
+    
     
 def search(request):
     return render(
@@ -113,28 +130,35 @@ def delete_device(request, pk):
     device.delete()
     return redirect('/manage')
 
-# 회원 가입
+
 def signup(request):
-    # signup 으로 POST 요청이 왔을 때, 새로운 유저를 만드는 절차를 밟는다.
+    form = UserForm(request.POST or None)
     if request.method == 'POST':
-        # password와 confirm에 입력된 값이 같다면
-        if request.POST['password'] == request.POST['re-password']:
-            # user 객체를 새로 생성
-            user = CustomUser.objects.create_user(username=request.POST['username'], password=request.POST['password'], email=request.POST['email'])
-            # 로그인 한다
-            auth.login(request, user)
-            return redirect('/')
-    # signup으로 GET 요청이 왔을 때, 회원가입 화면을 띄워준다.
-    return render(request, 'zikime/signup.html')
+        if form.is_valid():
+            form.save()
+            messages.success(request,'회원가입 성공! 로그인을 해주세요.', )
+            return render(request, 'zikime/login.html')
+            return HttpResponseRedirect('/')
+        else:
+            pass
+            messages.error(request,'가입정보를 다시 입력해주세요.')
+    else:
+        messages.success(request,'get')
+        
+    return render(request, 'zikime/signup.html', {'form':form,})
 
 # 로그인
-def login(request):
+def login(request): 
+    parameter = dict()
     # login으로 POST 요청이 들어왔을 때, 로그인 절차를 밟는다.
     if request.method == 'POST':
         # login.html에서 넘어온 username과 password를 각 변수에 저장한다.
         username = request.POST['username']
         password = request.POST['password']
 
+        if username == '' or password=='':
+            return render(request, 'zikime/login.html')
+            
         # 해당 username과 password와 일치하는 user 객체를 가져온다.
         user = auth.authenticate(request, username=username, password=password)
         
@@ -142,20 +166,24 @@ def login(request):
         if user is not None:
             # 로그인 한다
             auth.login(request, user)
+            messages.success(request,'로그인 성공! 환영합니다.')
             return redirect('/')
         # 존재하지 않는다면
         else:
             # 딕셔너리에 에러메세지를 전달하고 다시 login.html 화면으로 돌아간다.
-            return render(request, 'zikime/login.html', {'error' : 'username or password is incorrect.'})
-    # login으로 GET 요청이 들어왔을때, 로그인 화면을 띄워준다.
-    else:
-        return render(request, 'zikime/login.html')
+            messages.error(request,'로그인 실패! 로그인 정보가 일치하지 않습니다. ')
+            parameter['username'] = username
+        
+    return render(request, 'zikime/login.html', parameter)
+
+
 
 # 로그 아웃
 def logout(request):
     # logout으로 POST 요청이 들어왔을 때, 로그아웃 절차를 밟는다.
     if request.method == 'POST':
         auth.logout(request)
+        messages.warning(request,'로그아웃 하셨습니다. 안녕히가십시오.')
         return redirect('/')
 
     # logout으로 GET 요청이 들어왔을 때, 로그인 화면을 띄워준다.

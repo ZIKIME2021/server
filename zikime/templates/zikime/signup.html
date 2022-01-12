@@ -6,11 +6,11 @@
         background-color: #f8f8f8;
         border-radius: 20px;
         box-sizing: border-box;
-        padding: 20px 10px
+        padding: 20px 10px;
     }
 
     .signup-content {
-        width: 70%;
+        width: 50%;
         display: table;
         margin: 0 auto
     }
@@ -31,25 +31,26 @@
             </div>
         </div>
 
+        {# 변경 사항 있는지 확인 #}
         <div class="signup-form-wrap">
             <div class="col-12">
-                <form method="POST" action="{% url 'signup' %}">
+                <form action="" method="post">
                     {% csrf_token %}
-                    <p>username</p>
-                    <input type="text" class="form-control" name="username">
-                    <br>
-                    <p>email</p>
-                    <input type="email" class="form-control" name="email">
-                    <br>
-                    <p>password</p>
-                    <input type="password" class="form-control" name="password">
-                    <br>
-                    <p>password confirm</p>
-                    <input type="password" class="form-control" name="re-password">
-                    <br>
+                    {% comment %} <p><b>username</b></p>
+                    {{form.username}}
+                    <br><br>
+                    <p><b>email</b></p>
+                    {{form.email}}
+                    <br><br>
+                    <p><b>password</b></p>
+                    {{form.password}}
+                    <br><br>
+                    <p><b>password confirm</b></p>
+                    {{form.repassword}}
+                    <br><br> {% endcomment %}
+                    {{form.as_table}}
                     <input type="submit" class="btn btn-primary btn-block"value="회원가입">
                 </form>
-
             </div>
         </div>
     </div>
