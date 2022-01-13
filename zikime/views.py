@@ -193,12 +193,19 @@ def index(request):
     return render(request, 'zikime/index.html')
 
 
-def sos_request(request, serial):
+def sos_request(request):
     if request.method == 'GET':
-        device_id = request.GET['device_id']
+        device = Device.objects.get(serial=request.GET['device_id'])
+        device_id = device.id
+        master_email = device.master.email
         email_list = set()
+        email_list.add(master_email)
         for guest in Guest.objects.filter(device = device_id):
-            email_list.add(CustomUser.objects.get(username=guest)['email'])
+            print(guest)
+            email_list.add(CustomUser.objects.get(username=guest).email)
+
+        print(email_list)
+        return HttpResponse(','.join(list(email_list)))
 
 
 def history_save(request):
@@ -213,6 +220,7 @@ def delete_guest(request, fk):
     return redirect('/manage/detail/?device_id='+next)
 
 
+# 기기등록
 def regist_device(request):
     regist_num = request.GET['device-number']
     URL = "http://www.zikime.com:9999/device-management/register/" + regist_num
