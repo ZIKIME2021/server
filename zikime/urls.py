@@ -1,14 +1,13 @@
 from django.contrib import admin
 from django.urls import path
 from . import views
-
 urlpatterns = [
     path('', views.index, name='index'),
     path('get/', views.is_resistered, name='get'),
     path('lookfor/', views.lookfor, name='lookfor'),
     path('search/', views.search, name='search'),
     path('manage/',views.manage, name='manage'),
-    path('mypage/', views.mypage, name='mypage'),
+    path('mypage/<int:pk>/', views.mypage, name='mypage'),
     path('signup/', views.signup, name='signup'),
     path('manage/detail/add_guest/', views.add_guest, name='add_guest'),
     path('manage/detail/', views.detail, name='detail'),

@@ -2,8 +2,7 @@ import json
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
-from django.db import models
-from zikime.forms import UserForm
+from zikime.forms import UserForm, CustomUserChangeForm
 from zikime.models import CustomUser, Device, Guest
 from django.contrib import auth, messages
 from django.views.decorators.csrf import csrf_exempt
@@ -77,12 +76,32 @@ def manage(request):
         }
     )
 
+# @login_required
+# def mypage(request):
+#     return render(
+#         request,
+#         'zikime/mypage.html',
+#     )
 
-def mypage(request):
-    return render(
-        request,
-        'zikime/mypage.html',
-    )
+@login_required
+def mypage(request, pk):
+    user = get_object_or_404(CustomUser, pk=pk)
+    
+    if request.method == 'POST':
+        form = CustomUserChangeForm(request.POST, instance = user)
+        
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, '회원정보가 수정되었습니다.')
+            user_pk = str(pk)
+            return redirect('/mypage/'+user_pk)
+        else:
+            messages.error(request, '중복된 이메일입니다.')
+    else:
+        form = CustomUserChangeForm(instance = user)
+
+    return render(request, 'zikime/mypage.html', {'form':form})
+
 
 
 
@@ -136,7 +155,7 @@ def signup(request):
     if request.method == 'POST':
         if form.is_valid():
             form.save()
-            messages.success(request,'회원가입 성공! 로그인을 해주세요.', )
+            messages.success(request,'회원가입 성공! 로그인을 해주세요.')
             return render(request, 'zikime/login.html')
             return HttpResponseRedirect('/')
         else:

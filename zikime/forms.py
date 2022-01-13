@@ -1,6 +1,9 @@
 from django import forms
+from django.contrib import messages
 from django.forms.widgets import TextInput
 from . import models
+from django.contrib.auth.forms import UserChangeForm
+from django.contrib.auth import get_user_model
 
 class UserForm(forms.Form):
     username = forms.CharField(max_length=30, label_suffix='', widget=TextInput(attrs={'size':80}), required=True)
@@ -44,3 +47,20 @@ class UserForm(forms.Form):
         user = models.CustomUser.objects.create_user(username, email, password)
         user.save()   
         
+        
+class CustomUserChangeForm(UserChangeForm):
+    username = forms.CharField(max_length=30, label_suffix='', widget=TextInput(attrs={"size":80}), required=True, disabled=True)
+    email = forms.EmailField(label_suffix='', widget=TextInput(attrs={"size":80}), required=True)
+    
+    class Meta:
+        model = get_user_model()
+        fields = ('username', 'email')
+    
+    def clean_email(self):
+        email = self.cleaned_data.get("email") 
+        try:
+            models.CustomUser.objects.get(email=email)
+            raise forms.ValidationError("User already exists with that email")
+        except models.CustomUser.DoesNotExist:
+            return email
+    
