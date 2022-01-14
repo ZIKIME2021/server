@@ -76,17 +76,10 @@ def manage(request):
         }
     )
 
-# @login_required
-# def mypage(request):
-#     return render(
-#         request,
-#         'zikime/mypage.html',
-#     )
-
 @login_required
 def mypage(request, pk):
     user = get_object_or_404(CustomUser, pk=pk)
-    
+    #TODO: 현재 로그인된 사용자와 url pk가 동일할 때만 정보가 출력
     if request.method == 'POST':
         form = CustomUserChangeForm(request.POST, instance = user)
         
