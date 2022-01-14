@@ -8,11 +8,11 @@ manage_patterns = [
     path('detail/add_guest/', views.add_guest, name='add_guest'),
     path('<int:pk>/delete/', views.delete_device, name='delete_device'),
     path('regest_device/', views.regist_device, name='regist_device'),
+    path('change_nickname/', views.change_nickname, name='change_nickname')
 ]
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('get/', views.is_resistered, name='get'),
     path('lookfor/', views.lookfor, name='lookfor'),
     path('search/', views.search, name='search'),
     path('manage/', include(manage_patterns)),

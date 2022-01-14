@@ -247,3 +247,9 @@ def sos_api(request):
         email_list = set()
         for guest in Guest.objects.filter(device = device_id):
             email_list.add(CustomUser.objects.get(username=guest)['email'])
+
+
+def change_nickname(request):
+    if request.method == 'GET':
+        device_id = request.GET['device_id']
+        
