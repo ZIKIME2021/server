@@ -9,17 +9,7 @@ from django.contrib import auth, messages
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 import requests
-from django.urls import reverse
 
-def is_resistered(request):
-    if request.method == 'GET':
-        serial = request.GET['serial']
-        devices = Device.objects.all()
-        result = False
-        for device in devices:
-            if serial in str(device):
-                result = True
-        return JsonResponse({'result': result}, status=200)
 
 def complete(request):
     print(request.GET)
@@ -50,7 +40,6 @@ def lookfor(request):
             'device_list':devices
         }
     )
-    
     
     
     
