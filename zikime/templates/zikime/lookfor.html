@@ -35,22 +35,21 @@
 							<td>{{ device.nickname }}</td>
 							{% comment %} <td><p id="pos{{forloop.counter}}">ddd</p></td> {% endcomment %}
 							<td><p id="pos"></p></td>
-							<th><button class="btn btn-warning"> 영상 요청 </button></th>
+							<th><button class="btn btn-warning" onclick="getVideo()"> 영상 요청 </button></th>
 						</tr>
 						{% endfor %}
 						{% else %}
 						<tr>
 							<td colspan="2">등록된 기기가 없습니다.</td>
 							<td><p id="pos">ddd</p></td>
-					 		<th><button class="btn btn-warning" onclick="getVideo()"> 영상 요청 </button></th>
+					 		{% comment %} <th><button class="btn btn-warning" onclick="getVideo()"> 영상 요청 </button></th> {% endcomment %}
 						</tr>
 						{% endif %}
 					</tbody>
 				</table>
 			</div> 
-			<div>
-				<video id="video" class="video-js vjs-default-skin" width="480px" controls preload="auto"> </video>
-				
+			<div id="videoDiv">
+				<video id="video" class="video-js vjs-default-skin" width="480px"> </video>
 			</div>
 		</div>
 	</div>
@@ -59,16 +58,21 @@
 
 
 <script>
-    const player = videojs('video', {
-      autoplay: true
-    });
-    player.src({
-      src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
-      type: 'application/x-mpegURL'
-    });
-  </script>
+	
+	function getVideo(){
+		document.getElementById('videoDiv').style.display = "block";
 
-<script>
+		const player = videojs('video', {
+			autoplay: true
+		}); 
+		player.src({
+			src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+			type: 'application/x-mpegURL'
+		});
+	}
+
+	document.getElementById('videoDiv').style.display = "none";
+	
 	var markers = [];
 	var infos = [];
 	function searchDetailAddrFromCoords(coords, callback) {
