@@ -206,7 +206,7 @@ def sos_request(request):
             email_list.add(CustomUser.objects.get(username=guest).email)
 
         print(email_list)
-        return HttpResponse(','.join(list(email_list)))
+        return JsonResponse(list(email_list), safe=False)
 
 
 def history_save(request):
@@ -239,14 +239,6 @@ def regist_device(request):
         pass
     return redirect('/manage')
 
-
-# NOT COMPLETE
-def sos_api(request):
-    if request.method == 'GET':
-        device_id = request.GET['device_id']
-        email_list = set()
-        for guest in Guest.objects.filter(device = device_id):
-            email_list.add(CustomUser.objects.get(username=guest)['email'])
 
 
 def change_nickname(request):

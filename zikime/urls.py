@@ -7,7 +7,7 @@ manage_patterns = [
     path('detail/', views.detail, name='detail'),
     path('detail/add_guest/', views.add_guest, name='add_guest'),
     path('<int:pk>/delete/', views.delete_device, name='delete_device'),
-    path('regest_device/', views.regist_device, name='regist_device'),
+    path('regist_device/', views.regist_device, name='regist_device'),
     path('change_nickname/', views.change_nickname, name='change_nickname')
 ]
 
