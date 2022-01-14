@@ -246,8 +246,9 @@ def regist_device(request):
             serial = res_json['serial'],
         )
     else:
-        # alert incorrect regist_number
         pass
+        messages.error(request,'기기등록을 실패하였습니다. 다시 시도해주세요.')
+        
     return redirect('/manage')
 
 
