@@ -1,7 +1,15 @@
 <footer class="footer">
+   
     <div class="row mt-auto">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} navbar-fixed-bottom mb-5" align="center" id="message-alert" role="alert">
+                        {{ message.message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
         <div class="copyright">
-            <p class="text-muted" align="center">&copy; 2021. KOSS. All rights reserved.</p>
+            <p class="text-muted navbar-fixed-bottom" align="center">&copy; 2021. KOSS. All rights reserved.</p>
         </div>
     </div>
 </footer>

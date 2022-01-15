@@ -33,7 +33,7 @@
 
 <div class="container">
     <div class="detail-title">
-        'username'기기정보(보호자 / 안심지역)
+        {{ device.nickname }}기기정보(보호자 / 안심지역)
     </div>
 
 
@@ -73,9 +73,10 @@
                     {% for guest in guest_list %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ guest.username }}</td>
-                        <td>{{ guest.email }}</td>
-                        <th><button class="btn btn-warning m-1"> 권한 양도 </button><button class="btn btn-danger"> 보호자 삭제 </button></th>
+                        <td>{{ guest.user.username }}</td>
+                        <td>{{ guest.user.email }}</td>
+                        <th><button class="btn btn-warning m-1"> 권한 양도 </button><button class="btn btn-danger"> <a href="/detail/delete_guest/{{ guest.user.id }}?next={{device.id}}">보호자삭제</a>
+                            </button></th>
                     </tr>
                     {% endfor %}
                     {% else %}
@@ -86,59 +87,42 @@
                 </tbody>
             </table>
         </div>
+    </div>
+</div>
 
 
-        <div class="container">
-            <botton id="delete" class="btn btn-danger mt-5" onclick="deletecheck()">이 기기 삭제하기</button>
+<div class="modal fade" id="addProtector" tabindex="-1" role="dialog" aria-labelledby="addProtectorLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addProtectorLabel">보호자 정보 입력</h4>
+            </div>
+            <div class="modal-body">
+                <form action="/manage/detail/add_guest/?device_id={{ device.id }}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="protector-username" class="control-label">보호자 Username</label>
+                        <input type="text" class="form-control" id="protector-username" name="protector-username">
+                    </div>
+                    <div class="form-group">
+                        <label for="protector-email" class="control-label">보호자 Email</label>
+                        <input type="email" class="form-control" id="protector-email" name="protector-email"></input>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+                        <input type="submit" class="btn btn-primary" value="보호자추가등록"></button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
 
-    <div class="modal fade" id="addProtector" tabindex="-1" role="dialog" aria-labelledby="addProtectorLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="addProtectorLabel">보호자 정보 입력</h4>
-            </div>
-            <div class="modal-body">
-              <form>
-                <div class="form-group">
-                  <label for="protector-username" class="control-label">보호자 Username</label>
-                  <input type="text" class="form-control" id="protector-username">
-                </div>
-                <div class="form-group">
-                  <label for="protector-email" class="control-label">보호자 Email</label>
-                  <input type="email"class="form-control" id="protector-email"></input>
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
-              <button type="button" class="btn btn-primary">보호자 추가 등록</button>
-            </div>
-          </div>
-        </div>
-      </div>
 
 
-    <script>
-        function deletecheck() {
 
-            if (confirm("기기와 관련된 데이터들은 모두 삭제됩니다.\n정말 기기를 삭제 하시겠습니까??") == true) { //확인
-
-                // 기기관련정보 모두 삭제?
-            } else { //취소
-                return false;
-            }
-
-        }
-        $('.modal').on('hidden.bs.modal', function (e) {
-            console.log('modal close');
-          $(this).find('form')[0].reset()
-        });
-    </script>
-
-
-    {% endblock %}
+{% endblock %}
