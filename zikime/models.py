@@ -6,7 +6,6 @@ from django.db.models.deletion import CASCADE
 # Create your models here.
 
 class CustomUser(AbstractUser):
-    
     username = models.CharField(max_length=100, db_column='UID', verbose_name='username', unique=True)
     password = models.CharField(max_length=200, db_column='PW', verbose_name='password')
     email = models.EmailField(max_length=50, db_column='EMAIL',verbose_name='email')
@@ -82,3 +81,58 @@ class History(models.Model):
                 # deferrable = constraints.Deferrable.DEFERRED,
             )
         ]
+        
+        
+        
+class City_CSV(models.Model):
+    name = models.CharField(max_length=20, db_column='CITY_NAME')
+    
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        db_table = 'City'
+        verbose_name = '시'
+        verbose_name_plural = '시 리스트'
+        
+    
+class Country_CSV(models.Model):
+    name = models.CharField(max_length=20, db_column='COUNTRY_NAME')
+    city = models.ForeignKey('City_CSV', on_delete=CASCADE, db_column='CITY', default='city')
+    
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        db_table = 'Country'
+        verbose_name = '구'
+        verbose_name_plural = '구 리스트'
+        
+        
+
+class District_CSV(models.Model):
+    name = models.CharField(max_length=20, db_column='DISTRICT_NAME')
+    country = models.ForeignKey('Country_CSV', on_delete=CASCADE, db_column='COUNTRY', default='country')
+    
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        db_table = 'District'
+        verbose_name = '동'
+        verbose_name_plural = '동 리스트'
+        
+        
+
+
+class DistrictWhiteList(models.Model):
+    device = models.ForeignKey(Device, db_column='Device', verbose_name='디바이스', related_name='white_list_device', on_delete=models.CASCADE)
+    white_list = models.ForeignKey(District_CSV, db_column='WhiteList', verbose_name='안심지역', related_name='list', on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        db_table = 'DistrictWhiteList'
+        verbose_name = '안심지역'
+        verbose_name_plural = '안심지역 리스트'

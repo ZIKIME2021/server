@@ -3,7 +3,7 @@ from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
 from zikime.forms import UserForm, CustomUserChangeForm
-from zikime.models import CustomUser, Device, Guest
+from zikime.models import CustomUser, Device, District_CSV, Guest
 from django.contrib import auth, messages
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -119,11 +119,19 @@ def detail(request):
     context,    
     )
 
+
+
+# 화이트리스트 추가/삭제
+
 def detail_area(request):
+    district = District_CSV.objects.all()
     return render(
     request,
-    'zikime/detail_area.html',
+    'zikime/detail_area.html', {'district_list':district}
 )
+
+
+
 
 def add_guest(request):
 
