@@ -243,5 +243,7 @@ def regist_device(request):
 
 def change_nickname(request):
     if request.method == 'GET':
-        device_id = request.GET['device_id']
-        
+        device_id = request.GET.get('device_id')
+        nickname = request.GET['nickname']
+
+    print(device_id, nickname)

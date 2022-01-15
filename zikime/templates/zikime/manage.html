@@ -91,7 +91,7 @@
                         {{ device.nickname }}
                     </td>
                     <td>{{ device.created_at }}</td>
-                    <th><a href="/manage/{{device.id}}/delete"><button class="btn btn-danger m-1" onclick="deletecheck()"> 기기제거</button></a><button class="btn btn-info m-1 "data-toggle="modal" data-target="#nicknameModal"> 닉네임변경</button><a href="/manage/detail/?device_id={{ device.id }}"><button class="btn btn-success m-1 ">관리상세페이지</button></a> </th>
+                    <th><a href="/manage/{{device.id}}/delete"><button class="btn btn-danger m-1" onclick="deletecheck()"> 기기제거</button></a><a class="btn btn-info m-1 "data-toggle="modal" href="#nicknameModal" >닉네임변경</button><a href="/manage/detail/?device_id={{ device.id }}"><button class="btn btn-success m-1 ">관리상세페이지</button></a> </th>
                 </tr>
                 {% endfor %}
                 {% else %}
@@ -115,9 +115,10 @@
                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                <h4 class="modal-title" id="nicknameModalLabel">닉네임 변경</h4>
              </div>
-             <form action="/manage/change-nickname/?device_id={{ device.id }}">
+             <form action="/manage/change-nickname/">
                <div class="modal-body">
                      <input type="text" name="nickname" id="nickname" placeholder="닉네임" required>
+                     <input type="hidden", name="device_id" value="{{ device.id }}">
                </div>
                <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
