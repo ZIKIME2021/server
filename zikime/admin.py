@@ -58,3 +58,29 @@ class HistoryAdmin(admin.ModelAdmin):
             'fields':('latitude', 'longitude', 'altitude')
         }),
     )
+    
+    
+@admin.register(models.City_CSV)
+class CityAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    fields = ('name',)
+    
+@admin.register(models.Country_CSV)
+class CountryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'city')
+    fields = ('name',)
+    
+@admin.register(models.District_CSV)
+class DistrictAdmin(admin.ModelAdmin):
+    list_display = ('name', 'country')
+    fields = ('name',)
+    
+    
+    
+@admin.register(models.DistrictWhiteList)
+class DistrictWhiteListAdmin(admin.ModelAdmin):
+    list_display = ('device', 'white_list')
+    fields = ('device','list')
+    
+    
+    
