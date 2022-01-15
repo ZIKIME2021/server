@@ -53,15 +53,20 @@ def search(request):
 def manage(request):
 
     devices = set()
+    guest_devices = set()
     
     for e in Device.objects.filter(master=request.user):
-        devices.add(e)    
+        devices.add(e)
+
+    for e in Guest.objects.filter(user=request.user):        
+        guest_devices.add(e.device)
 
     return render(
         request,
         'zikime/manage.html',
         {
-            'device_list':devices
+            'device_list':devices,
+            'guest_device_list':guest_devices
         }
     )
 
@@ -246,5 +251,6 @@ def change_nickname(request):
     if request.method == 'GET':
         device_id = request.GET.get('device_id')
         nickname = request.GET['nickname']
+        Device.objects.filter(pk=device_id).update(nickname=nickname)
 
-    print(device_id, nickname)
+    return redirect('/manage')

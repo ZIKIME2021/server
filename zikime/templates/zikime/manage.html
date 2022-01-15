@@ -91,13 +91,27 @@
                         {{ device.nickname }}
                     </td>
                     <td>{{ device.created_at }}</td>
-                    <th><button class="btn btn-danger m-1" onclick="deletecheck('{{ device.id }}')"> 기기제거</button><a class="btn btn-info m-1 "data-toggle="modal" href="#nicknameModal" >닉네임변경</button><a href="/manage/detail/?device_id={{ device.id }}"><button class="btn btn-success m-1 ">관리상세페이지</button></a> </th>
+                    <th><button class="btn btn-danger m-1" onclick="deletecheck('{{ device.id }}')"> 기기제거</button><a data-device-id={{device.id}} class="btn btn-info m-1 nickname" data-toggle="modal" href="#nicknameModal" >닉네임변경</button><a href="/manage/detail/?device_id={{ device.id }}"><button class="btn btn-success m-1 ">관리상세페이지</button></a> </th>
+                </tr>
+                {% endfor %}
+                {% else %}
+                {% endif %}
+
+                {% if guest_device_list %}
+                {% for guest_device in guest_device_list %}
+                <tr>
+                  <td>{{ forloop.counter }}</td>
+                    <td>
+                        {{ guest_device.nickname }}
+                    </td>
+                    <td>{{ guest_device.created_at }}</td>
                 </tr>
                 {% endfor %}
                 {% else %}
                 <tr>
                     <td colspan="3" 등록기기없음></td>
                 </tr>
+                
                 {% endif %}
                 {% endif %}
 
@@ -118,7 +132,7 @@
              <form action="/manage/change-nickname/">
                <div class="modal-body">
                      <input type="text" name="nickname" id="nickname" placeholder="닉네임" required>
-                     <input type="hidden", name="device_id" value="{{ device.id }}">
+                     <input type="hidden" name="device_id" id="device_id" value="">
                </div>
                <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
@@ -171,6 +185,13 @@
           console.log('modal close');
         $(this).find('form')[0].reset()
       });
+
+      $(function(){
+         $(".nickname").click(function(){
+            var data_var = $(this).data('device-id')
+            $(".modal-body #device_id").val(data_var);
+         })
+      })
    </script>
 
 
