@@ -91,7 +91,7 @@
                         {{ device.nickname }}
                     </td>
                     <td>{{ device.created_at }}</td>
-                    <th><a href="/manage/{{device.id}}/delete"><button class="btn btn-danger m-1" onclick="deletecheck()"> 기기제거</button></a><a class="btn btn-info m-1 "data-toggle="modal" href="#nicknameModal" >닉네임변경</button><a href="/manage/detail/?device_id={{ device.id }}"><button class="btn btn-success m-1 ">관리상세페이지</button></a> </th>
+                    <th><button class="btn btn-danger m-1" onclick="deletecheck('{{ device.id }}')"> 기기제거</button><a class="btn btn-info m-1 "data-toggle="modal" href="#nicknameModal" >닉네임변경</button><a href="/manage/detail/?device_id={{ device.id }}"><button class="btn btn-success m-1 ">관리상세페이지</button></a> </th>
                 </tr>
                 {% endfor %}
                 {% else %}
@@ -157,10 +157,10 @@
          console.log('modal close');
        $(this).find('form')[0].reset()
      });
-      function deletecheck() {
+      function deletecheck(device_id) {
 
           if (confirm("기기와 관련된 데이터들은 모두 삭제됩니다.\n정말 기기를 삭제 하시겠습니까??") == true) { //확인
-
+               location.href = "/manage/"+device_id+"/delete"
               // 기기관련정보 모두 삭제?
           } else { //취소
               return false;
