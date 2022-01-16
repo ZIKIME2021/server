@@ -89,8 +89,9 @@
 
 	function UpdateMap(){
 
-		var device_list = {{device_list}}
-		console.log(device_list)
+		var device_list = "{{serial_list|safe}}";
+		let temp = device_list.replace(/'/g, '"')
+		console.log(temp)
 
 		// 주소-좌표 변환 객체를 생성
 		var devicePositions = [ //등록된 기기들의 위치 및 정보
@@ -99,7 +100,8 @@
 		];
 
 		var xhr = new XMLHttpRequest;
-		xhr.open("GET", "http://www.zikime.com:9999/state/1", false)
+		xhr.open("POST", "http://www.zikime.com:9999/device-management/state", false)
+		xhr.setRequestHeader('Content-type', 'application/json');
 		xhr.onreadystatechange = function() {
                     if (xhr.readyState === XMLHttpRequest.DONE) {
 						var json = xhr.responseText;
@@ -112,7 +114,7 @@
 						// console.log([latitude, longitude, 'TEST', 'N'])
 					}
 		}
-		xhr.send();
+		xhr.send(temp);
 
 		//devicePostions의 개수만큼 infowindow 및 marker 생성
 		for(var i = 0; i < markers.length; i++){

@@ -26,17 +26,21 @@ def index(request):
 @login_required
 def lookfor(request):
     devices = set()
+    serial_list = set()
     for e in Device.objects.filter(master=request.user):
         devices.add(e)
-        
+        serial_list.add(e.serial)
+
     # TODO:
     # GUEST로 있는 기기들의 목록도 가져와야함.
 
+    print(list(serial_list))
     return render(
         request,
         'zikime/lookfor.html',
         {
-            'device_list':devices
+            'device_list':devices,
+            'serial_list':list(serial_list)
         }
     )
     
