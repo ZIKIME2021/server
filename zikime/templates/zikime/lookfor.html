@@ -92,6 +92,7 @@
 		var device_list = "{{serial_list|safe}}";
 		let temp = device_list.replace(/'/g, '"')
 		console.log(temp)
+		device_list = device_list.replace(/'/g, '').split(',')
 
 		// 주소-좌표 변환 객체를 생성
 		var devicePositions = [ //등록된 기기들의 위치 및 정보
@@ -106,10 +107,14 @@
                     if (xhr.readyState === XMLHttpRequest.DONE) {
 						var json = xhr.responseText;
 						var jsonObject = JSON.parse(json)
-						latitude = parseFloat(jsonObject["latitude"]);
-						longitude = parseFloat(jsonObject["longitude"]);
-						mode = jsonObject["mode"];
-						devicePositions.push([latitude, longitude, '기기', 'N'])
+						for(var i = 0; i < device_list.length; i++){
+							let serial = device_list[i]
+							latitude = parseFloat(jsonObject[serial]["latitude"]);
+							longitude = parseFloat(jsonObject[serial]["longitude"]);
+							mode = jsonObject[serial]["mode"];
+							devicePositions.push([latitude, longitude, '기기', mode])
+						}
+						
 						// console.log(devicePositions[2])
 						// console.log([latitude, longitude, 'TEST', 'N'])
 					}
