@@ -31,7 +31,7 @@ def lookfor(request):
         
     # TODO:
     # GUEST로 있는 기기들의 목록도 가져와야함.
-    
+
     return render(
         request,
         'zikime/lookfor.html',
@@ -140,7 +140,11 @@ def add_guest(request):
     return redirect('/manage/detail/?device_id='+device_id)
 
 def delete_device(request, pk):
+    print('DELETE DEVICE METHOD')
     device = get_object_or_404(Device, id=pk)
+    serial = device.serial
+    print('SERIAL:', serial)
+    requests.delete('http://www.zikime.com:9999/device/'+serial)
     device.delete()
     return redirect('/manage')
 
